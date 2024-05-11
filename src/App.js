@@ -1,12 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import Menu from "./menu.js"
-
+import WiiMenu from "./wiimenu.js"
 
 function App() {
   return (
-    <div className="App">
-      <Menu />
+    <div className="App" style = {{backgroundColor: "black"}}>
+      <WiiMenu />
     </div>
   );
 }
