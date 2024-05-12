@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern Trainer</title>
+  <style>
+    
+    #trainer {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 50vh;
+    }
+
+    h1 {
+      font-size: 2em;
+    }
+
+    #cipheredWord {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    #submission {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      padding: 5px;
+      font-size: 1em;
+    }
+
+    button {
+      padding: 5px 10px;
+      font-size: 1em;
+    }
+
+    #result {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style = "font-family: Arial, Helvetica, sans-serif; margin-top: 1%; font-weight: 100;">Pattern Trainer</h1>
+
+  <div id = "trainer">
+    <p style = "font-size: 2em;">Decipher the word:</p>
+    <p id="cipheredWord" style = "font-family: 'Courier New', Courier, monospace; font-size: 8em; font-weight: bold; "></p>
+    <input type="text" id="decipherInput">
+    <button onclick="checkAnswer()" style = "font-family: Arial, Helvetica, sans-serif; margin-top: 1%;">Check Answer</button>
+    <p id="result">X words remaining...</p>
+  </div>
+
+  <script>
+    var input = document.getElementById("decipherInput");
+
+    // Execute a function when the user presses a key on the keyboard
+    input.addEventListener("keypress", function(event) {
+    // If the user presses the "Enter" key on the keyboard
+    if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        checkAnswer()
+    }
+    }); 
+
+    // List of words
+    let words = [
+        "AGAIN/EVERY",
+        "TRUTH",
+        "WHICH/START/PEACE/CEASE/LEAVE",
+        "SENSE/ONION",
+        "RARER",
+        "HAPPY/PIZZA",
+        "ALWAYS/ABOARD/CANCEL",
+        "PEOPLE/PROPER",
+        "BETTER/FOLLOW/HOLLOW",
+        "LITTLE",
+        "DEGREE",
+        "INTENT/OUTPUT",
+        "RATHER/ENABLE/MEDIUM",
+        "THOUGHT",
+        "ACHIEVE",
+        "BECAUSE/THROUGH",
+        "NOTHING",
+        "ANYTHING",
+        "EVERYONE/MOMENTUM",
+        "PROGRESS",
+        "TOGETHER",
+        "TOMORROW",
+        "REMEMBER",
+        "SOMETHING/EDUCATION/BEAUTIFUL/COMPUTERS",
+        "SOMETIMES",
+        "KNOWLEDGE/PLAINTEXT",
+        "NECESSARY/NECESSITY",
+        "HAPPINESS",
+        "EVERYTHING",
+        "ESPECIALLY",
+        "GOVERNMENT",
+        "PHILOSOPHY",
+        "UNNECESSARY",
+        "DIFFERENTLY",
+        "MISUNDERSTANDING"
+    ];
+
+    // Function to generate a new word
+    function generateNewWord() {
+        // Randomly select a word from the list
+        const randomWord = words[Math.floor(Math.random() * words.length)];
+        const sourceWords = randomWord.split('/');
+        // Apply a random substitution cipher to the word
+        let cipheredWord = '';
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let shuffledAlphabet = alphabet.split('').sort(() => Math.random() - 0.5).join('');
+
+        for (let i = 0; i < sourceWords[0].length; i++) {
+        const index = alphabet.indexOf(sourceWords[0][i]);
+        cipheredWord += shuffledAlphabet[index];
+        }
+
+        document.getElementById('cipheredWord').textContent = cipheredWord;
+
+        return sourceWords;
+    }
+
+    // Initialize the first word
+    let currentWords = generateNewWord();
+    let count = currentWords.length;
+    let fails = 0;
+    let foundWords = [];
+    let failMessages = [
+    '<span style="color:red;">Incorrect! ❌ Try again.</span>',
+    '<span style="color:red;">Still wrong! ❌ Try again.</span>',
+    '<span style="color:red;">Nope! ❌ Try again.</span>',
+    `<span style="color:red;">RIP ❌ Solution: ${currentWords}</span>`
+    ];
+    document.getElementById('result').innerHTML = `<span style="color:black;">${count} remaining...</span>`;
+    // Check if the deciphered word matches the original word
+    function checkAnswer() {
+      const decipherInput = document.getElementById('decipherInput').value.toUpperCase();
+      if (currentWords.includes(decipherInput) && !foundWords.includes(decipherInput)) {
+        count--;
+        foundWords.push(decipherInput);
+        if (count === 0) {
+            document.getElementById('result').innerHTML = '<span style="color:green;">Correct! ✅</span>';
+            setTimeout(() => {
+                // Generate a new word
+                currentWords = generateNewWord();
+                document.getElementById('decipherInput').value = '';
+                count = currentWords.length;
+                foundWords = [];
+                document.getElementById('result').innerHTML = `<span style="color:black;">${count} remaining...</span>`;
+                fails = 0;
+            }, 500);
+        } else {
+            
+            document.getElementById('result').innerHTML = `<span style="color:black;">${count} remaining...</span>`;
+        }
+      } else {
+        document.getElementById('result').innerHTML = failMessages[fails];
+        fails++;
+        if (fails === 4) {
+            setTimeout(() => {
+                // Generate a new word
+                currentWords = generateNewWord();
+                document.getElementById('decipherInput').value = '';
+                count = currentWords.length;
+                foundWords = [];
+                document.getElementById('result').innerHTML = `<span style="color:black;">${count} remaining...</span>`;
+                fails = 0;
+            }, 1500);
+        }
+      }
+    }
+
+  </script>
+</body>
+</html>

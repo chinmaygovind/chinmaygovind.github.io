@@ -24,7 +24,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Chinmay Menu</title>
+    <title>Warning</title>
     <style>
       #warning {
         height: 100%; 
@@ -85,6 +85,7 @@
       document.getElementById("root").style.display = "inline";
       setTimeout(() => {
       document.getElementById("warning").remove();
+        document.title = "Wii Menu";
         const root = document.getElementById("root");
         root.classList.add('active');        
         var bgm = document.getElementById("backgroundMusic");

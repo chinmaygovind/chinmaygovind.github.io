@@ -99,6 +99,9 @@ export default function WiiMenu() {
             case 4:
                 document.location.href = "https://www.theonion.com/";
                 break;
+            case 6:
+                document.location.href = "channels/codebusters/index.html";
+                break;
             default:
                 window.location.reload();
         }
