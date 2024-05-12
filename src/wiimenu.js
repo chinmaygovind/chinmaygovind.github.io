@@ -96,6 +96,9 @@ export default function WiiMenu() {
             case 3:
                 document.location.href = "https://www.instagram.com/sirchinmay/";
                 break;
+            case 4:
+                document.location.href = "https://www.theonion.com/";
+                break;
             default:
                 window.location.reload();
         }
