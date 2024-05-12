@@ -64,6 +64,8 @@ export default function WiiMenu() {
             if (0.2 < x && x < 0.48 && 0.8 < y && y < 0.93) clickState = "LEFT";
             if (0.52 < x && x < 0.8 && 0.8 < y && y < 0.93) clickState = "RIGHT";
             if (clickState !== "NONE") {
+                var bgm = document.getElementById("backgroundMusic");
+                bgm.pause();
                 var clickSound = document.getElementById("clickSounds");
                 clickSound.src = "audio/refresh.wav";
                 clickSound.play();
@@ -88,16 +90,21 @@ export default function WiiMenu() {
     function startChannel(id) {
         switch (id) {
             case 0:
+                document.location.href = "https://play.typeracer.com/";
                 break;
             case 1:
                 break;
             case 2:
+                document.location.href = "https://www.amazon.com/Day-Trade-Theoretical-foundations-discretionary/dp/B0CH28XG8M";
                 break;
             case 3:
                 document.location.href = "https://www.instagram.com/sirchinmay/";
                 break;
             case 4:
                 document.location.href = "https://www.theonion.com/";
+                break;
+            case 5:
+                document.location.href = "https://sites.google.com/cvschools.org/cv-science-olympiad/home";
                 break;
             case 6:
                 document.location.href = "channels/codebusters/index.html";
