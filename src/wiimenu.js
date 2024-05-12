@@ -20,9 +20,9 @@ export default function WiiMenu() {
                 var lowY = (0.04 + 0.25 * channelY);
                 var highY = lowY + 0.25;
                 if (lowX < x && x < highX && lowY < y && y < highY) {
+                    currentChannel = i;
                     var scale = 8;
                     var channels = document.getElementById('channels');
-                    var rect = channels.getBoundingClientRect();
                     
                     var targetX = window.innerWidth * (0.16 + 0.23 * channelX);
                     var targetY = window.innerHeight * (lowY + highY) / 2;
@@ -46,11 +46,15 @@ export default function WiiMenu() {
 
                     var bgm = document.getElementById("backgroundMusic");
                     bgm.pause();
+                    setTimeout(() => {
+                        bgm.src = `audio/channels/channel${currentChannel}.mp3`
+                        bgm.removeAttribute("loop")
+                        bgm.play();
+                    }, 250);
                     //content.scrollTo(tx, ty);
                 }
             }
-            setTimeout(() => state = "START_MENU", 500);
-            currentChannel = i;
+            setTimeout(() => state = "START_MENU", 100);
         }
         if (state === "START_MENU") {
             var x = e.clientX / window.innerWidth;
@@ -59,8 +63,41 @@ export default function WiiMenu() {
             var clickState = "NONE";
             if (0.2 < x && x < 0.48 && 0.8 < y && y < 0.93) clickState = "LEFT";
             if (0.52 < x && x < 0.8 && 0.8 < y && y < 0.93) clickState = "RIGHT";
-            console.log(clickState);
-            alert(clickState);
+            if (clickState !== "NONE") {
+                var clickSound = document.getElementById("clickSounds");
+                clickSound.src = "audio/refresh.wav";
+                clickSound.play();
+                setTimeout(() => {
+                    var root = document.getElementById("root");
+                    root.classList.remove('fade-in');
+                    root.classList.add('fade-out');
+                }, 500); 
+                if (clickState === "LEFT") {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2500);
+                } else if (clickState === "RIGHT") {
+                    setTimeout(() => {
+                        startChannel(currentChannel);
+                    }, 2500);
+                }
+            }
+        }
+    }
+
+    function startChannel(id) {
+        switch (id) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                document.location.href = "https://www.instagram.com/sirchinmay/";
+                break;
+            default:
+                window.location.reload();
         }
     }
 
