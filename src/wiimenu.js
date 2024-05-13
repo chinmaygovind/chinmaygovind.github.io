@@ -93,6 +93,7 @@ export default function WiiMenu() {
                 document.location.href = "https://play.typeracer.com/";
                 break;
             case 1:
+                document.location.href = "channels/mii/index.html";
                 break;
             case 2:
                 document.location.href = "https://www.amazon.com/Day-Trade-Theoretical-foundations-discretionary/dp/B0CH28XG8M";

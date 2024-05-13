@@ -15,7 +15,7 @@ export default function Channels() {
         style = {{zIndex: 0, position: "relative", float: "left", margin: "2.5% 0% 0 8%",  width: "21%", height: "21%"}}></video>
         
         <video src = "videos/channels/channel1.mp4" autoPlay loop muted id = "channel-1"
-        style = {{zIndex: 0, position: "relative", float: "left", margin: "4% 0 0 0%", width: "21%", height: "21%"}}></video>
+        style = {{zIndex: 0, position: "relative", float: "left", margin: "4.9% 0 0 0%", width: "21%", height: "21%"}}></video>
         
         <video src = "videos/channels/channel2.mp4" autoPlay loop muted id = "channel-2"
         style = {{zIndex: 0, position: "relative", float: "left", margin: "4.7% 0% 0 0%", width: "21%", height: "21%"}}></video>
