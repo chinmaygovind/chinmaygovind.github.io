@@ -110,6 +110,9 @@ export default function WiiMenu() {
             case 6:
                 document.location.href = "channels/codebusters/index.html";
                 break;
+            case 7:
+                document.location.href = "channels/music/index.html";
+                break;
             default:
                 window.location.reload();
         }

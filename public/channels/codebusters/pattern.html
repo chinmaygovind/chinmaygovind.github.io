@@ -84,13 +84,15 @@
         "BETTER/FOLLOW/HOLLOW",
         "LITTLE",
         "DEGREE",
+        "CHOICE",
         "INTENT/OUTPUT",
         "RATHER/ENABLE/MEDIUM",
         "THOUGHT",
         "ACHIEVE",
         "BECAUSE/THROUGH",
+        "SCIENCE",
         "NOTHING",
-        "ANYTHING",
+        "ANYTHING/STRENGTH",
         "EVERYONE/MOMENTUM",
         "PROGRESS",
         "TOGETHER",
@@ -139,7 +141,7 @@
     '<span style="color:red;">Incorrect! ❌ Try again.</span>',
     '<span style="color:red;">Still wrong! ❌ Try again.</span>',
     '<span style="color:red;">Nope! ❌ Try again.</span>',
-    `<span style="color:red;">RIP ❌ Solution: ${currentWords}</span>`
+    '<span style="color:red;">RIP ❌</span>'
     ];
     document.getElementById('result').innerHTML = `<span style="color:black;">${count} remaining...</span>`;
     // Check if the deciphered word matches the original word
@@ -165,19 +167,22 @@
             document.getElementById('result').innerHTML = `<span style="color:black;">${count} remaining...</span>`;
         }
       } else {
+        if (fails < 3 && fails >= 0) {
         document.getElementById('result').innerHTML = failMessages[fails];
         fails++;
         document.getElementById('decipherInput').reset();
-        if (fails >= 4) {
-            setTimeout(() => {
-                // Generate a new word
-                currentWords = generateNewWord();
-                document.getElementById('decipherInput').value = '';
-                count = currentWords.length;
-                foundWords = [];
-                document.getElementById('result').innerHTML = `<span style="color:black;">${count} remaining...</span>`;
-                fails = 0;
-            }, 1500);
+        } if (fails >= 3) {
+          fails = -1;
+          document.getElementById('result').innerHTML = `<span style="color:red;">RIP ❌ Solution: ${currentWords}</span>`;
+          setTimeout(() => {
+              // Generate a new word
+              currentWords = generateNewWord();
+              document.getElementById('decipherInput').value = '';
+              count = currentWords.length;
+              foundWords = [];
+              document.getElementById('result').innerHTML = `<span style="color:black;">${count} remaining...</span>`;
+              fails = 0;
+          }, 1500);
         }
       }
     }

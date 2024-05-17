@@ -35,17 +35,6 @@ export default function Channels() {
         <video src = "videos/channels/channel7.mp4" autoPlay loop muted id = "channel-7"
         style = {{zIndex: 0, position: "relative", float: "left", margin: "0% 0 0 0%", width: "21%", height: "21%"}}></video>
         
-        <video src = "videos/channels/channel8.mp4" autoPlay loop muted id = "channel-8"
-        style = {{zIndex: 0, position: "relative", float: "left", margin: "0% 0 0 8%", width: "21%", height: "21%"}}></video>
-        
-        <video src = "videos/channels/channel9.mp4" autoPlay loop muted id = "channel-9"
-        style = {{zIndex: 0, position: "relative", float: "left", margin: "0% 0 0 0%", width: "21%", height: "21%"}}></video>
-        
-        <video src = "videos/channels/channel10.mp4" autoPlay loop muted id = "channel-10"
-        style = {{zIndex: 0, position: "relative", float: "left", margin: "0% 0 0 0%", width: "21%", height: "21%"}}></video>
-        
-        <video src = "videos/channels/channel11.mp4" autoPlay loop muted id = "channel-11"
-        style = {{zIndex: 0, position: "relative", float: "left", margin: "0% 0 0 0%", width: "21%", height: "21%"}}></video>
             
         </div>
 

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Channel</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        .video-background {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .video-background video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+        .container {
+            text-align: center;
+            width: 80%;
+            margin: auto;
+            z-index: 1;
+            position: relative;
+            color: white;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        h1 {
+            font-family:Georgia, 'Times New Roman', Times, serif;
+        }
+        #musicButton {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <audio id="music" src="../../audio/channels/music/brownnoise.mp3" loop></audio>
+    <button id="musicButton">
+        <img src="../../images/mii/music_off.png" alt="Music On">
+        <!-- https://www.audiocheck.net/testtones_brownnoise.php -->
+    </button>
+    <div class="video-background">
+        <video autoplay muted loop poster="poster.jpg" id="bgvid">
+            <!-- https://www.youtube.com/watch?v=CGpDN238JZQ -->
+            <source src="../../videos/rain.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="container">
+        <h1>Music Channel</h1>
+        <select id="videoSelector" onchange="changeVideo()">
+            <option value="">Select a video</option>
+            <option value="https://www.youtube.com/embed/lFOkRVgrPKU">Clair de Lune - Demo</option>
+            <option value="https://www.youtube.com/embed/dQw4w9WgXcQ">Placeholder</option>
+            <option value="https://www.youtube.com/embed/dQw4w9WgXcQ">Placeholder</option>
+        </select>
+        <div class="video-container" id="videoPlayer">
+            <!-- The selected video will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        function changeVideo() {
+            var selectBox = document.getElementById("videoSelector");
+            var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+            if (selectedValue) {
+                var videoPlayer = document.getElementById("videoPlayer");
+                videoPlayer.innerHTML = '<iframe src="' + selectedValue + '" frameborder="0" allowfullscreen></iframe>';
+            } else {
+                document.getElementById("videoPlayer").innerHTML = "";
+            }
+        }
+        const music = document.getElementById("music");
+        music.volume = 0.2;
+        const musicButton = document.getElementById("musicButton");
+        let musicPlaying = false;
+        //https://www.youtube.com/watch?v=hQFtG3QeNRA
+        musicButton.addEventListener("click", function() {
+            if (musicPlaying) {
+            music.pause();
+            musicPlaying = false;
+            musicButton.innerHTML = '<img src="../../images/mii/music_off.png" alt="Music Off">';
+            } else {
+            music.play();
+            musicPlaying = true;
+            musicButton.innerHTML = '<img src="../../images/mii/music_on.png" alt="Music On">';
+            }
+            //https://img.freepik.com/premium-vector/volume-control-paper-icons-media-control-buttons-sound-sound-off_487717-98.jpg
+        });
+    </script>
+</body>
+</html>
