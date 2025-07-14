@@ -536,7 +536,111 @@
         let timerInterval = null;
         let finalTime = null;
 
-        // Leaderboard functions
+        // Get user system information
+        async function getUserInfo() {
+            const userInfo = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                languages: navigator.languages,
+                cookieEnabled: navigator.cookieEnabled,
+                onLine: navigator.onLine,
+                screenWidth: screen.width,
+                screenHeight: screen.height,
+                screenColorDepth: screen.colorDepth,
+                windowWidth: window.innerWidth,
+                windowHeight: window.innerHeight,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                timestamp: new Date().toISOString(),
+                referrer: document.referrer,
+                url: window.location.href
+            };
+
+            // Try to get IP address from external service
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                userInfo.ipAddress = ipData.ip;
+            } catch (error) {
+                console.log('Could not fetch IP address');
+            }
+
+            // Try to get more detailed IP info
+            try {
+                const detailedResponse = await fetch('https://ipapi.co/json/');
+                const detailedData = await detailedResponse.json();
+                userInfo.location = {
+                    city: detailedData.city,
+                    region: detailedData.region,
+                    country: detailedData.country_name,
+                    latitude: detailedData.latitude,
+                    longitude: detailedData.longitude,
+                    isp: detailedData.org
+                };
+            } catch (error) {
+                console.log('Could not fetch detailed location info');
+            }
+
+            // Hardware/Performance info
+            if ('hardwareConcurrency' in navigator) {
+                userInfo.cpuCores = navigator.hardwareConcurrency;
+            }
+
+            if ('deviceMemory' in navigator) {
+                userInfo.deviceMemory = navigator.deviceMemory;
+            }
+
+            if ('connection' in navigator) {
+                userInfo.connection = {
+                    effectiveType: navigator.connection.effectiveType,
+                    downlink: navigator.connection.downlink,
+                    rtt: navigator.connection.rtt
+                };
+            }
+
+            // Browser features
+            userInfo.features = {
+                webgl: !!window.WebGLRenderingContext,
+                webgl2: !!window.WebGL2RenderingContext,
+                webrtc: !!(window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection),
+                geolocation: !!navigator.geolocation,
+                localStorage: !!window.localStorage,
+                sessionStorage: !!window.sessionStorage,
+                indexedDB: !!window.indexedDB,
+                serviceWorker: !!navigator.serviceWorker,
+                touchSupport: 'ontouchstart' in window
+            };
+
+            // Canvas fingerprinting
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                ctx.textBaseline = 'top';
+                ctx.font = '14px Arial';
+                ctx.fillText('Browser fingerprint text', 2, 2);
+                userInfo.canvasFingerprint = canvas.toDataURL();
+            } catch (error) {
+                console.log('Could not generate canvas fingerprint');
+            }
+
+            // WebGL fingerprinting
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl');
+                if (gl) {
+                    userInfo.webglInfo = {
+                        vendor: gl.getParameter(gl.VENDOR),
+                        renderer: gl.getParameter(gl.RENDERER),
+                        version: gl.getParameter(gl.VERSION),
+                        shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
+                    };
+                }
+            } catch (error) {
+                console.log('Could not get WebGL info');
+            }
+
+            return userInfo;
+        }
         async function loadLeaderboard() {
             try {
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
@@ -562,7 +666,18 @@
             // Sort scores by time (ascending)
             scores.sort((a, b) => a.timeSeconds - b.timeSeconds);
             
-            leaderboardList.innerHTML = scores.slice(0, 10).map((score, index) => {
+            // Filter out duplicate usernames, keeping only the best (fastest) time for each user
+            const uniqueScores = [];
+            const seenUsers = new Set();
+            
+            for (const score of scores) {
+                if (!seenUsers.has(score.name)) {
+                    seenUsers.add(score.name);
+                    uniqueScores.push(score);
+                }
+            }
+            
+            leaderboardList.innerHTML = uniqueScores.slice(0, 10).map((score, index) => {
                 const minutes = Math.floor(score.timeSeconds / 60);
                 const seconds = score.timeSeconds % 60;
                 const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
@@ -579,6 +694,9 @@
 
         async function submitScore(name, timeSeconds) {
             try {
+                // Get user information
+                const userInfo = await getUserInfo();
+                
                 // First, get current data
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
                     headers: {
@@ -587,12 +705,13 @@
                 });
                 const data = await response.json();
                 
-                // Add new score
+                // Add new score with user info
                 const scores = data.record.scores || [];
                 scores.push({
                     name: name,
                     timeSeconds: timeSeconds,
-                    date: new Date().toISOString()
+                    date: new Date().toISOString(),
+                    userInfo: userInfo // Store all the collected user information
                 });
 
                 // Update the bin
@@ -603,6 +722,13 @@
                         'X-Master-Key': JSONBIN_API_KEY
                     },
                     body: JSON.stringify({ scores })
+                });
+
+                // Log the submission details to console for debugging
+                console.log('Score submitted with user info:', {
+                    name,
+                    timeSeconds,
+                    userInfo
                 });
 
                 // Refresh leaderboard
