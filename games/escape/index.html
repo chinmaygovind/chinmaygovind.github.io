@@ -456,7 +456,7 @@
     </div>
 
     <div id="game-container">
-        <div id="timer">00:00</div>
+        <div id="timer">00:00.00</div>
         <button id="help-button" onclick="showHelp()">?</button>
         <h1>Escape Game</h1>
         <div id="game-board">
@@ -663,8 +663,12 @@
                 return;
             }
 
-            // Sort scores by time (ascending)
-            scores.sort((a, b) => a.timeSeconds - b.timeSeconds);
+            // Sort scores by time (ascending) - handle both old (seconds) and new (milliseconds) format
+            scores.sort((a, b) => {
+                const timeA = a.timeMilliseconds || (a.timeSeconds * 1000);
+                const timeB = b.timeMilliseconds || (b.timeSeconds * 1000);
+                return timeA - timeB;
+            });
             
             // Filter out duplicate usernames, keeping only the best (fastest) time for each user
             const uniqueScores = [];
@@ -678,9 +682,12 @@
             }
             
             leaderboardList.innerHTML = uniqueScores.slice(0, 10).map((score, index) => {
-                const minutes = Math.floor(score.timeSeconds / 60);
-                const seconds = score.timeSeconds % 60;
-                const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                // Handle both old (seconds) and new (milliseconds) format
+                const timeMs = score.timeMilliseconds || (score.timeSeconds * 1000);
+                const minutes = Math.floor(timeMs / 60000);
+                const seconds = Math.floor((timeMs % 60000) / 1000);
+                const milliseconds = Math.floor((timeMs % 1000) / 10);
+                const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
                 
                 return `
                     <div class="score-entry">
@@ -709,7 +716,8 @@
                 const scores = data.record.scores || [];
                 scores.push({
                     name: name,
-                    timeSeconds: timeSeconds,
+                    timeSeconds: timeSeconds, // This will now be in milliseconds
+                    timeMilliseconds: timeSeconds, // Store raw milliseconds
                     date: new Date().toISOString(),
                     userInfo: userInfo // Store all the collected user information
                 });
@@ -841,7 +849,7 @@
 
         function startTimer() {
             gameStartTime = Date.now();
-            timerInterval = setInterval(updateTimer, 1000);
+            timerInterval = setInterval(updateTimer, 10); // Update every 10ms for smoother milliseconds
         }
 
         function updateTimer() {
@@ -850,10 +858,11 @@
             const elapsedTime = Date.now() - gameStartTime;
             const minutes = Math.floor(elapsedTime / 60000);
             const seconds = Math.floor((elapsedTime % 60000) / 1000);
+            const milliseconds = Math.floor((elapsedTime % 1000) / 10); // Show centiseconds (hundredths)
             
             const timerElement = document.getElementById('timer');
             if (timerElement) {
-                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
             }
         }
 
@@ -862,10 +871,10 @@
                 clearInterval(timerInterval);
                 timerInterval = null;
                 
-                // Calculate final time in seconds
+                // Calculate final time in milliseconds for more precision
                 if (gameStartTime) {
                     const elapsedTime = Date.now() - gameStartTime;
-                    finalTime = Math.floor(elapsedTime / 1000);
+                    finalTime = elapsedTime; // Store in milliseconds
                 }
             }
         }
@@ -1012,9 +1021,10 @@
                     const finalTimeElement = document.getElementById('final-time');
                     
                     if (finalTimeElement && finalTime !== null) {
-                        const minutes = Math.floor(finalTime / 60);
-                        const seconds = finalTime % 60;
-                        finalTimeElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                        const minutes = Math.floor(finalTime / 60000);
+                        const seconds = Math.floor((finalTime % 60000) / 1000);
+                        const milliseconds = Math.floor((finalTime % 1000) / 10);
+                        finalTimeElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
                     }
                     
                     if(winMsg) winMsg.style.display = 'flex';
