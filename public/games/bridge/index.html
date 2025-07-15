@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penn Bridge - Java Bridge Building Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto Mono', 'Consolas', 'Monaco', monospace;
+            line-height: 1.5;
+            color: #2c3e50;
+            background: #ecf0f1;
+            overflow-x: hidden;
+        }
+
+        /* Industrial Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(52, 73, 94, 0.1) 1px, transparent 1px),
+                linear-gradient(rgba(52, 73, 94, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 100vw;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 0;
+        }
+
+        /* Header spans full width */
+        header {
+            grid-column: 1 / -1;
+            background: 
+                linear-gradient(135deg, rgba(52, 73, 94, 0.7) 0%, rgba(44, 62, 80, 0.8) 100%),
+                url('images/sky.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ecf0f1;
+            padding: 2rem 3rem;
+            position: relative;
+            border-bottom: 4px solid #e74c3c;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"><circle cx="25" cy="25" r="2" fill="none" stroke="rgba(236,240,241,0.1)" stroke-width="1"/><line x1="0" y1="25" x2="50" y2="25" stroke="rgba(236,240,241,0.05)" stroke-width="1"/><line x1="25" y1="0" x2="25" y2="50" stroke="rgba(236,240,241,0.05)" stroke-width="1"/></svg>') repeat;
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title-section {
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            color: #3498db;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            color: #bdc3c7;
+        }
+
+        .project-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .download-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: 2px solid #e74c3c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .download-btn:hover {
+            background: #c0392b;
+            border-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .download-btn.secondary {
+            background: transparent;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+        }
+
+        .download-btn.secondary:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        /* Left Panel - Project Info */
+        .left-panel {
+            padding: 3rem;
+            background: white;
+            border-right: 4px solid #34495e;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 900;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 0.5rem;
+        }
+
+        .project-overview {
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+
+        .features-list {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 4px solid #e74c3c;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(231, 76, 60, 0.2);
+        }
+
+        .feature-item h4 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .feature-item p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .tech-details {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tech-item {
+            background: #34495e;
+            padding: 1rem;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .tech-item h4 {
+            color: #e74c3c;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .tech-item p {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Right Panel - Demo & Media */
+        .right-panel {
+            padding: 3rem;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            overflow-y: auto;
+        }
+
+        .demo-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .demo-container {
+            background: white;
+            border-radius: 4px;
+            padding: 2rem;
+            border: 2px solid #34495e;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .demo-placeholder {
+            width: 100%;
+            height: 200px;
+            background: 
+                linear-gradient(45deg, #ecf0f1 25%, transparent 25%), 
+                linear-gradient(-45deg, #ecf0f1 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #ecf0f1 75%),
+                linear-gradient(-45deg, transparent 75%, #ecf0f1 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            border: 2px dashed #bdc3c7;
+        }
+
+        .demo-title {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .demo-description {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .web-demo-link {
+            background: #27ae60;
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .web-demo-link:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .requirements {
+            background: #2c3e50;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+        }
+
+        .requirements h4 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .requirements ul {
+            color: #bdc3c7;
+            padding-left: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .requirements li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr 1fr;
+                height: auto;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .left-panel, .right-panel {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #ecf0f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e74c3c;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c0392b;
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .left-panel {
+            animation: slideInLeft 0.8s ease;
+        }
+
+        .right-panel {
+            animation: slideInRight 0.8s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="title-section">
+                    <h1>PENN BRIDGE</h1>
+                    <p class="subtitle">Advanced Bridge Building Simulator with Structural Analysis</p>
+                    <div class="project-badges">
+                        <span class="badge">Java Swing</span>
+                        <span class="badge">Physics Engine</span>
+                        <span class="badge">Structural Analysis</span>
+                        <span class="badge">Educational Tool</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a href="#" class="download-btn">📥 Download JAR</a>
+                    <a href="https://github.com/chinmaygovind/pennbridge" class="download-btn secondary">📦 Source Code</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="left-panel">
+            <div class="section-title">Project Overview</div>
+            <div class="project-overview">
+                <p>Penn Bridge is a sophisticated bridge-building simulator developed in Java that combines engineering principles with interactive gameplay. This application allows users to design, build, and test bridge structures using realistic physics and structural analysis.</p>
+                
+                <p>The project demonstrates advanced Java programming techniques, object-oriented design patterns, and real-time physics simulation. Users can place joints, connect them with steel members, and test their designs with a virtual traveler crossing the bridge.</p>
+            </div>
+
+            <div class="section-title">Key Features</div>
+            <div class="features-list">
+                <div class="feature-item">
+                    <h4>🔧 Interactive Design Tools</h4>
+                    <p>Place joints with precision grid snapping, connect them with steel members, and use selection tools to modify your design in real-time.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>⚡ Real-Time Physics</h4>
+                    <p>Advanced structural analysis engine calculates forces, stress, and identifies potential failure points as you build.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎯 Bridge Testing</h4>
+                    <p>Test your designs with a virtual traveler crossing the bridge, revealing structural weaknesses and member failures.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📊 Force Visualization</h4>
+                    <p>Color-coded members show compression (red) and tension (blue) forces, with dashed lines indicating structural failures.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>💾 Save & Load System</h4>
+                    <p>Save your bridge designs to .bridge files and share them with friends or load sample bridges for inspiration.</p>
+                </div>
+            </div>
+
+            <div class="section-title">Technical Details</div>
+            <div class="tech-details">
+                <div class="tech-item">
+                    <h4>🔧 Java SE 11+ & Swing GUI</h4>
+                    <p>Built with modern Java using Swing framework for cross-platform desktop application development.</p>
+                </div>
+                <div class="tech-item">
+                    <h4>⚙️ MVC Architecture</h4>
+                    <p>Implements Model-View-Controller pattern with Command pattern for undo/redo functionality.</p>
+                </div>
+                <div class="tech-item">
+                    <h4>🧮 Physics Engine</h4>
+                    <p>Real-time structural analysis with force calculation and collision detection algorithms.</p>
+                </div>
+                <div class="tech-item">
+                    <h4>🎨 Custom Graphics</h4>
+                    <p>AWT-based rendering system with real-time force visualization and interactive elements.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="demo-section">
+                <div class="demo-container">
+                    <div class="demo-title">🎥 Video Demo</div>
+                    <div class="demo-placeholder">Video Demo Coming Soon</div>
+                    <div class="demo-description">Watch a complete walkthrough of building and testing a bridge structure with real-time physics simulation.</div>
+                </div>
+
+                <div class="demo-container">
+                    <div class="demo-title">📸 Screenshots</div>
+                    <div class="demo-placeholder">Game Screenshots Gallery</div>
+                    <div class="demo-description">See the application in action with various bridge designs, force analysis, and test results.</div>
+                </div>
+            </div>
+
+            <div class="requirements">
+                <h4>System Requirements</h4>
+                <ul>
+                    <li>Java Runtime Environment (JRE) 11 or higher</li>
+                    <li>Windows, macOS, or Linux operating system</li>
+                    <li>Minimum 4GB RAM recommended</li>
+                    <li>Graphics card with Java 2D support</li>
+                </ul>
+                
+                <h4 style="margin-top: 1.5rem;">How to Run</h4>
+                <ul>
+                    <li>Download the JAR file to your computer</li>
+                    <li>Ensure Java is installed on your system</li>
+                    <li>Double-click the JAR file or run: <code style="background: rgba(231, 76, 60, 0.2); padding: 0.25rem 0.5rem; border-radius: 3px; color: #e74c3c;">java -jar pennbridge.jar</code></li>
+                    <li>Start building amazing bridges!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

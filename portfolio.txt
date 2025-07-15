@@ -1,0 +1,24 @@
+
+
+projects:
+astroGPT
+IBEC
+project euler
+penn electric racing
+cis 1600 prarie learn
+QuickCal
+FTC stuff?
+Scioly Robot Tour Documentation?
+Ex Futuro
+
+games:
+wii
+penn bridge
+escape 
+Scioly Code 
+
+Other:
+Piano
+Clash Royale
+Cubing
+Duolingo
