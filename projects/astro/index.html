@@ -358,12 +358,50 @@
             <div id="dsoModalLinks" style="margin-bottom:0.7rem; font-size:0.95rem;"></div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/opencv/4.5.3/opencv.js"></script>
     <script>
 
+        // --- OpenCV.js dynamic import from CDN ---
+        function loadOpenCV(callback) {
+            if (window.cv && cv.ORB) {
+                callback();
+                return;
+            }
+            if (!document.querySelector('script[src*="opencv.js"]')) {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/opencv/4.5.3/opencv.js';
+                script.async = true;
+                script.onload = function() {
+                    // Wait for cv to be ready
+                    waitForOpenCV(callback);
+                };
+                document.head.appendChild(script);
+            } else {
+                waitForOpenCV(callback);
+            }
+        }
+
+        // Wait for OpenCV.js to load
+        function waitForOpenCV(callback) {
+            if (window.cv && cv.ORB) {
+                callback();
+            } else {
+                setTimeout(() => waitForOpenCV(callback), 200);
+            }
+        }
+
         const fileInput = document.getElementById("image-input");
+
         const submitButton = document.getElementById("submit");
         const statusElement = document.getElementById("status");
+        submitButton.disabled = true;
+        statusElement.style.display = 'block';
+        statusElement.innerHTML = 'Loading OpenCV.js...';
+
+        // Load OpenCV.js from CDN and enable UI when ready
+        loadOpenCV(() => {
+            submitButton.disabled = false;
+            statusElement.innerHTML = 'Ready for search!';
+        });
 
         document.getElementById('uploadButton').addEventListener('click', function() {
             fileInput.click();
