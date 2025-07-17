@@ -591,6 +591,7 @@
                 if (imgPath && !imgPath.startsWith('projects/astro/')) {
                     imgPath = 'projects/astro/' + imgPath.replace(/^\/+/, '');
                 }
+                imgPath = 'https://chinmaygovind.github.io/' + imgPath;
                 document.getElementById('dsoModalName').textContent = top.name + (top.type ? ' (' + top.type + ')' : '');
                 document.getElementById('dsoModalImg').src = imgPath;
                 document.getElementById('dsoModalImg').style.display = 'block';
@@ -602,6 +603,7 @@
                     if (p && !p.startsWith('projects/astro/')) {
                         p = 'projects/astro/' + p.replace(/^\/+/, '');
                     }
+                    p = 'https://chinmaygovind.github.io/' + p;
                     let percent = res.matchPercent !== undefined ? res.matchPercent : 0;
                     linksHtml += `<li style='margin-bottom:1.2em;'>`
                         + `<div style='display:flex; align-items:center;'>`
