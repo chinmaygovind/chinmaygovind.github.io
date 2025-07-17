@@ -363,7 +363,7 @@
         // Add OpenCV.js script dynamically if not present
         if (!document.querySelector('script[src*="opencv.js"]')) {
             const script = document.createElement('script');
-            script.src = '/static/scripts/opencv.js'; // Place opencv.js in static folder
+            script.src = 'projects/astro/static/scripts/opencv.js'; // Place opencv.js in static folder
             document.head.appendChild(script);
         }
 
@@ -439,7 +439,7 @@
         }
         // Load descriptor database from static/dsoDescriptorDatabase.json
         let dsoDatabase = [];
-        fetch('/static/dsoDescriptorDatabase.json')
+        fetch('projects/astro/static/dsoDescriptorDatabase.json')
             .then(response => response.json())
             .then(data => {
                 // The new database is already flat: each entry has name, type, path, descriptors
@@ -560,7 +560,7 @@
                     imgPath = '/' + imgPath;
                 }
                 document.getElementById('dsoModalName').textContent = top.name + (top.type ? ' (' + top.type + ')' : '');
-                document.getElementById('dsoModalImg').src = imgPath;
+                document.getElementById('dsoModalImg').src = 'projects/astro/' + imgPath;
                 document.getElementById('dsoModalImg').style.display = 'block';
                 document.getElementById('dsoModalDesc').textContent = `Top 5 matches:`;
                 // List top 5 matches with image, description, link, and match percent
