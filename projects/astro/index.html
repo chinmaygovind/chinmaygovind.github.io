@@ -587,28 +587,30 @@
                 // Only show top 5 matches
                 let top5 = matchResults.slice(0, 5);
                 let top = top5[0];
-                let imgPath = top.path;
-                if (imgPath && !imgPath.startsWith('/')) {
-                    imgPath = '/' + imgPath;
+                let imgPath = top.path ? top.path.replace(/\\/g, '/') : '';
+                if (imgPath && !imgPath.startsWith('projects/astro/')) {
+                    imgPath = 'projects/astro/' + imgPath.replace(/^\/+/, '');
                 }
                 document.getElementById('dsoModalName').textContent = top.name + (top.type ? ' (' + top.type + ')' : '');
-                document.getElementById('dsoModalImg').src = 'projects/astro' + imgPath;
+                document.getElementById('dsoModalImg').src = imgPath;
                 document.getElementById('dsoModalImg').style.display = 'block';
                 document.getElementById('dsoModalDesc').textContent = `Top 5 matches:`;
                 // List top 5 matches with image, description, link, and match percent
                 let linksHtml = '<ol style="padding-left:1.2em;">';
                 top5.forEach((res, idx) => {
-                    let p = res.path;
-                    if (p && !p.startsWith('/')) p = '/' + p;
+                    let p = res.path ? res.path.replace(/\\/g, '/') : '';
+                    if (p && !p.startsWith('projects/astro/')) {
+                        p = 'projects/astro/' + p.replace(/^\/+/, '');
+                    }
                     let percent = res.matchPercent !== undefined ? res.matchPercent : 0;
                     linksHtml += `<li style='margin-bottom:1.2em;'>`
                         + `<div style='display:flex; align-items:center;'>`
-                        + `<img src='${p.replace("\\", "/")}' alt='${res.name}' style='width:60px; height:60px; object-fit:cover; border-radius:8px; margin-right:1em; border:2px solid #74b9ff;'>`
+                        + `<img src='${p}' alt='${res.name}' style='width:60px; height:60px; object-fit:cover; border-radius:8px; margin-right:1em; border:2px solid #74b9ff;'>`
                         + `<div style='flex:1;'>`
                         + `<b>${res.name}${res.type ? ' (' + res.type + ')' : ''}</b><br>`
                         + `<span style='color:#b8b8b8;'>${res.description ? res.description : ''}</span><br>`
                         + `<span style='color:#00cec9;'>Match: ${percent}%</span> `
-                        + `<a href='${p.replace("\\", "/")}' target='_blank' style='color:#00cec9; margin-left:0.5em;'>View</a>`
+                        + `<a href='${p}' target='_blank' style='color:#00cec9; margin-left:0.5em;'>View</a>`
                         + `</div></div></li>`;
                 });
                 linksHtml += '</ol>';
