@@ -603,12 +603,12 @@
                     let percent = res.matchPercent !== undefined ? res.matchPercent : 0;
                     linksHtml += `<li style='margin-bottom:1.2em;'>`
                         + `<div style='display:flex; align-items:center;'>`
-                        + `<img src='projects/astro${p}' alt='${res.name}' style='width:60px; height:60px; object-fit:cover; border-radius:8px; margin-right:1em; border:2px solid #74b9ff;'>`
+                        + `<img src='projects/astro${p.replace("\\", "/")}' alt='${res.name}' style='width:60px; height:60px; object-fit:cover; border-radius:8px; margin-right:1em; border:2px solid #74b9ff;'>`
                         + `<div style='flex:1;'>`
                         + `<b>${res.name}${res.type ? ' (' + res.type + ')' : ''}</b><br>`
                         + `<span style='color:#b8b8b8;'>${res.description ? res.description : ''}</span><br>`
                         + `<span style='color:#00cec9;'>Match: ${percent}%</span> `
-                        + `<a href='${p}' target='_blank' style='color:#00cec9; margin-left:0.5em;'>View</a>`
+                        + `<a href='projects/astro${p.replace("\\", "/")}' target='_blank' style='color:#00cec9; margin-left:0.5em;'>View</a>`
                         + `</div></div></li>`;
                 });
                 linksHtml += '</ol>';
