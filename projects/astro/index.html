@@ -592,7 +592,7 @@
                     imgPath = '/' + imgPath;
                 }
                 document.getElementById('dsoModalName').textContent = top.name + (top.type ? ' (' + top.type + ')' : '');
-                document.getElementById('dsoModalImg').src = 'projects/astro/' + imgPath;
+                document.getElementById('dsoModalImg').src = 'projects/astro' + imgPath;
                 document.getElementById('dsoModalImg').style.display = 'block';
                 document.getElementById('dsoModalDesc').textContent = `Top 5 matches:`;
                 // List top 5 matches with image, description, link, and match percent
@@ -603,7 +603,7 @@
                     let percent = res.matchPercent !== undefined ? res.matchPercent : 0;
                     linksHtml += `<li style='margin-bottom:1.2em;'>`
                         + `<div style='display:flex; align-items:center;'>`
-                        + `<img src='${p}' alt='${res.name}' style='width:60px; height:60px; object-fit:cover; border-radius:8px; margin-right:1em; border:2px solid #74b9ff;'>`
+                        + `<img src='projects/astro${p}' alt='${res.name}' style='width:60px; height:60px; object-fit:cover; border-radius:8px; margin-right:1em; border:2px solid #74b9ff;'>`
                         + `<div style='flex:1;'>`
                         + `<b>${res.name}${res.type ? ' (' + res.type + ')' : ''}</b><br>`
                         + `<span style='color:#b8b8b8;'>${res.description ? res.description : ''}</span><br>`
