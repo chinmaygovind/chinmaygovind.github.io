@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroGPT - Astronomical Image Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #bgvid {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            transform: translateX(-50%) translateY(-50%);
+            opacity: 0.3;
+            transition: 1s opacity;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 1.5rem;
+            max-width: 1600px;
+            width: 98%;
+            height: 100vh;
+            align-items: stretch;
+            justify-content: center;
+            padding: 0.5rem 0;
+        }
+
+        .upload-section {
+            flex: 1;
+            max-width: 700px;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .side-panel {
+            flex: 0 0 420px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(45deg, #74b9ff, #0984e3, #6c5ce7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(116, 185, 255, 0.5);
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #b8b8b8;
+            font-weight: 300;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #0984e3, #74b9ff);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 180px;
+            box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(9, 132, 227, 0.5);
+            background: linear-gradient(45deg, #0056b3, #5a9bd4);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        #submit {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 180px;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+            margin-top: 0.8rem;
+        }
+
+        #submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.5);
+            background: linear-gradient(45deg, #00a085, #00b2a9);
+        }
+
+        #submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #imageDisplay {
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        #displayedImg {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #status {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(116, 185, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #74b9ff;
+            font-weight: 500;
+            display: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #74b9ff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .side-panel h2 {
+            font-size: 1.3rem;
+            color: #74b9ff;
+            margin-bottom: 0.6rem;
+            border-bottom: 2px solid rgba(116, 185, 255, 0.3);
+            padding-bottom: 0.4rem;
+        }
+
+        .side-panel p {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #b8b8b8;
+            margin-bottom: 0.6rem;
+        }
+
+        .side-panel strong {
+            color: #ffffff;
+        }
+
+        .dso-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.4rem;
+            margin-top: 0.6rem;
+            flex-grow: 1;
+        }
+
+        .dso-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.4rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #ddd;
+            border-left: 3px solid #74b9ff;
+            transition: all 0.3s ease;
+        }
+
+        .dso-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #00cec9;
+            transform: translateX(5px);
+        }
+
+        .about-section {
+            background: rgba(116, 185, 255, 0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(116, 185, 255, 0.2);
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .about-section h3 {
+            font-size: 1.3rem;
+            color: #74b9ff;
+            margin-bottom: 0.8rem;
+            border-bottom: 2px solid rgba(116, 185, 255, 0.3);
+            padding-bottom: 0.5rem;
+        }
+
+        .about-section p {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #b8b8b8;
+            margin-bottom: 0.6rem;
+        }
+
+        .about-section strong {
+            color: #ffffff;
+        }
+
+        @media (max-width: 1200px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+                height: auto;
+                padding: 1rem;
+            }
+            
+            .side-panel {
+                flex: none;
+                max-width: 700px;
+                width: 100%;
+                order: 2;
+                max-height: 60vh;
+            }
+            
+            .upload-section {
+                max-width: 700px;
+                width: 100%;
+                order: 1;
+            }
+            
+            .dso-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video playsinline autoplay muted loop id="bgvid">
+        <source src="/projects/astro/static/media/space.mp4" type="video/mp4">
+    </video>   
+
+    <div class="main-container">
+        <div class="upload-section">
+            <h1>AstroGPT</h1>
+            <p class="subtitle">Intelligent Astronomical Image Search & Deep Sky Object (DSO) Identification</p>
+            
+            <div class="button-group">
+                <button id="uploadButton" class="button">📁 Upload Image</button>
+                <button id="clipboardButton" class="button">📋 Paste from Clipboard</button>
+            </div>
+            
+            <form id="image-form" enctype="multipart/form-data">   
+                <input style="display: none" type="file" id="image-input" name="image-input" accept="image/*"/>
+                <input id="submit" type="button" value="🚀 Start Search"/>   
+                <p id="status" style="display: none">Status: </p>
+            </form>
+            
+            <div id="imageDisplay">
+                <img id="displayedImg" src="" alt="Uploaded Image">
+            </div>
+        </div>
+
+        <div class="side-panel">
+            <h2>ℹ️ About</h2>
+            <div class="about-section">
+                <p><strong>Purpose:</strong> Created for Science Olympiad Astronomy event preparation and Deep Sky Object identification practice.</p>
+                <p><strong>How it works:</strong> Uses OpenCV ORB feature detection to match uploaded images against a curated database of astronomical objects.</p>
+                <p><strong>Data source:</strong> Hundreds of images per object sourced from Google Images and research papers from Google Scholar.</p>
+            </div>
+
+            <h2>🌌 Supported DSOs</h2>
+            <div class="dso-list">
+                <div class="dso-item">2M 1207</div>
+                <div class="dso-item">AB Aurigae</div>
+                <div class="dso-item">Beta Pictoris</div>
+                <div class="dso-item">Carina Nebula</div>
+                <div class="dso-item">HD 169142</div>
+                <div class="dso-item">HH 7-11</div>
+                <div class="dso-item">HR 8799</div>
+                <div class="dso-item">Luhman 16</div>
+                <div class="dso-item">NGC 1333</div>
+                <div class="dso-item">TRAPPIST-1</div>
+                <div class="dso-item">TW Hya</div>
+                <div class="dso-item">V 1298 Tau b</div>
+                <div class="dso-item">V830 Tau b</div>
+                <div class="dso-item">WASP-18b</div>
+                <div class="dso-item">WASP-39b</div>
+                <div class="dso-item">WASP-43b</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for DSO match info -->
+    <div id="dsoModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#222; color:#fff; border-radius:16px; max-width:420px; width:90vw; margin:auto; padding:2rem 1.5rem; box-shadow:0 8px 32px #000; position:relative;">
+            <span id="dsoModalClose" style="position:absolute; top:12px; right:18px; font-size:2rem; cursor:pointer; color:#74b9ff;">&times;</span>
+            <h2 id="dsoModalName" style="margin-bottom:0.7rem; color:#74b9ff;"></h2>
+            <img id="dsoModalImg" src="" alt="DSO Image" style="max-width:100%; max-height:220px; border-radius:10px; margin-bottom:1rem; box-shadow:0 4px 16px #000; border:2px solid #74b9ff;">
+            <div id="dsoModalDesc" style="margin-bottom:0.7rem; font-size:1rem; color:#b8b8b8;">Description goes here.</div>
+            <div id="dsoModalLinks" style="margin-bottom:0.7rem; font-size:0.95rem;"></div>
+        </div>
+    </div>
+    <script>
+
+        // --- OpenCV.js dynamic import from CDN ---
+        function loadOpenCV(callback) {
+            if (window.cv && cv.ORB) {
+                callback();
+                return;
+            }
+            if (!document.querySelector('script[src*="opencv.js"]')) {
+                const script = document.createElement('script');
+                script.src = 'https://docs.opencv.org/4.5.0/opencv.js';
+                script.async = true;
+                script.onload = function() {
+                    // Wait for cv to be ready
+                    waitForOpenCV(callback);
+                };
+                document.head.appendChild(script);
+            } else {
+                waitForOpenCV(callback);
+            }
+        }
+
+        // Wait for OpenCV.js to load
+        function waitForOpenCV(callback) {
+            if (window.cv && cv.ORB) {
+                callback();
+            } else {
+                setTimeout(() => waitForOpenCV(callback), 200);
+            }
+        }
+
+        const fileInput = document.getElementById("image-input");
+
+        const submitButton = document.getElementById("submit");
+        const statusElement = document.getElementById("status");
+        submitButton.disabled = true;
+        statusElement.style.display = 'block';
+        statusElement.innerHTML = 'Loading OpenCV.js...';
+
+        // Load OpenCV.js from CDN and enable UI when ready
+        loadOpenCV(() => {
+            submitButton.disabled = false;
+            statusElement.innerHTML = 'Ready for search!';
+        });
+
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        document.getElementById('image-input').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                displayImage(file);
+            }
+        });
+
+        document.getElementById('image-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Disable default submit
+        });
+
+        submitButton.addEventListener('click', function() {
+            if (!fileInput.files.length) {
+                alert('Please select an image first!');
+                return;
+            }
+            statusElement.style.display = 'block';
+            statusElement.innerHTML = 'Status: Processing... <span class="loading"></span>';
+            submitButton.disabled = true;
+            submitButton.value = 'Processing...';
+            // Defer to allow status to update before heavy processing
+            setTimeout(() => processImage(fileInput.files[0]), 50);
+        });
+
+        document.addEventListener('paste', function(event) {
+            const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+            for (let index in items) {
+                const item = items[index];
+                if (item.kind === 'file' && item.type.startsWith('image/')) {
+                    const blob = item.getAsFile();
+                    const dt = new DataTransfer();
+                    dt.items.add(blob);
+                    fileInput.files = dt.files;
+                    displayImage(blob);
+                    break;
+                }
+            }
+        });
+
+        function displayImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imageUrl = event.target.result;
+                const imageDisplay = document.getElementById('imageDisplay');
+                const displayedImg = document.getElementById('displayedImg');
+                displayedImg.src = imageUrl;
+                imageDisplay.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- Client-side image matching logic ---
+        // Extract ORB descriptors from an image Mat
+        function extractORBDescriptors(mat) {
+            let brisk = new cv.BRISK();
+            let keypoints = new cv.KeyPointVector();
+            let descriptors = new cv.Mat();
+            brisk.detectAndCompute(mat, new cv.Mat(), keypoints, descriptors);
+            brisk.delete();
+            keypoints.delete();
+            return descriptors;
+        }
+        // Load descriptor database from static/dsoDescriptorDatabase.json
+        let dsoDatabase = [];
+        fetch('static/dsoDescriptorDatabase.json')
+            .then(response => response.json())
+            .then(data => {
+                // The new database is already flat: each entry has name, type, path, descriptors
+                dsoDatabase = data;
+                waitForOpenCV(() => {
+                    statusElement.style.display = 'block';
+                    statusElement.innerHTML = 'Ready for search!';
+                });
+            })
+            .catch(err => {
+                console.error('Failed to load DSO descriptor database:', err);
+            });
+
+        function matchDescriptorArrays(desc1, desc2) {
+            // Robust matching using BFMatcher with k-NN and Lowe's ratio test
+            if (!desc1 || !desc2 || desc1.length === 0 || desc2.length === 0) return 0;
+            // Convert JS arrays to cv.Mat
+            let mat1 = cv.matFromArray(desc1.length, desc1[0].length, cv.CV_8U, desc1.flat());
+            let mat2 = cv.matFromArray(desc2.length, desc2[0].length, cv.CV_8U, desc2.flat());
+            let bf = new cv.BFMatcher(cv.NORM_HAMMING, false);
+            let matches = new cv.DMatchVectorVector();
+            bf.knnMatch(mat1, mat2, matches, 2);
+            let goodMatches = 0;
+            for (let i = 0; i < matches.size(); i++) {
+                if (matches.get(i).size() < 2) continue;
+                let m = matches.get(i).get(0);
+                let n = matches.get(i).get(1);
+                if (m.distance < 0.75 * n.distance) {
+                    goodMatches++;
+                }
+            }
+            // Clean up
+            mat1.delete();
+            mat2.delete();
+            bf.delete();
+            matches.delete();
+            return goodMatches;
+        }
+
+        async function findBestMatch(uploadedMat) {
+            let uploadedDescMat = extractORBDescriptors(downsampleMat(uploadedMat));
+            let totalImages = dsoDatabase.length;
+            let uploadedDesc = [];
+            for (let r = 0; r < uploadedDescMat.rows; r++) {
+                let row = [];
+                for (let c = 0; c < uploadedDescMat.cols; c++) {
+                    row.push(uploadedDescMat.ucharPtr(r)[c]);
+                }
+                uploadedDesc.push(row);
+            }
+            // Debug: show descriptor counts
+            console.log('Uploaded image descriptors:', uploadedDesc.length);
+            if (dsoDatabase.length > 0) {
+                console.log('First DB entry descriptors:', dsoDatabase[0].descriptors ? dsoDatabase[0].descriptors.length : 'none');
+            }
+            let matchResults = [];
+            const maxNameLen = 24;
+            const maxNumLen = String(totalImages).length;
+            for (let i = 0; i < dsoDatabase.length; i++) {
+                let dso = dsoDatabase[i];
+                let percent = Math.round((i+1)/totalImages*100);
+                let nameStr = (dso.name || '').padEnd(maxNameLen, ' ');
+                let idxStr = String(i+1).padStart(maxNumLen, ' ');
+                let totalStr = String(totalImages).padStart(maxNumLen, ' ');
+                let percentStr = String(percent).padStart(3, ' ');
+                statusElement.innerHTML = `<pre style='display:inline-block; min-width:380px; font-family:monospace; font-size:1.1em; background:none; border:none; margin:0; padding:0; text-align:left;'>Status: Checking ${nameStr} (${idxStr}/${totalStr}) ... ${percentStr}%</pre>`;
+                await new Promise(resolve => setTimeout(resolve, 10)); // allow UI update
+                if (!dso.descriptors || !Array.isArray(dso.descriptors) || dso.descriptors.length === 0) continue;
+                // Debug: show descriptor counts for each db entry
+                if (i < 5) console.log(`DB[${i}] ${dso.name} descriptors:`, dso.descriptors.length);
+                let score = matchDescriptorArrays(uploadedDesc, dso.descriptors);
+                let matchPercent = uploadedDesc.length > 0 ? Math.round(100 * score / uploadedDesc.length) : 0;
+                matchResults.push({ name: dso.name, type: dso.type, path: dso.path, score, matchPercent });
+            }
+            uploadedDescMat.delete();
+            matchResults.sort((a, b) => b.score - a.score);
+            return matchResults;
+        }
+
+        function processImage(file) {
+            // Wait for OpenCV.js to be ready
+            if (typeof cv === 'undefined' || !cv.ORB) {
+                statusElement.innerHTML = 'Status: OpenCV.js not loaded.';
+                submitButton.disabled = false;
+                submitButton.value = '🚀 Start Search';
+                return;
+            }
+            let img = new window.Image();
+            img.onload = async function() {
+                statusElement.style.display = 'block';
+                let canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                let ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                let mat = cv.imread(canvas);
+            let matchResults = await findBestMatch(mat);
+            statusElement.innerHTML = 'Status: Top matches:';
+            submitButton.disabled = false;
+            submitButton.value = '🚀 Start Search';
+            mat.delete();
+            // Show modal popup with top 5 matches
+            showDSOModal(matchResults);
+        // Show DSO modal popup
+        function showDSOModal(matchResults) {
+            // Show top match name and image
+            if (matchResults.length === 0) {
+                document.getElementById('dsoModalName').textContent = 'No match found';
+                document.getElementById('dsoModalImg').style.display = 'none';
+                document.getElementById('dsoModalDesc').textContent = '';
+                document.getElementById('dsoModalLinks').innerHTML = '';
+            } else {
+                // Only show top 5 matches
+                let top5 = matchResults.slice(0, 5);
+                let top = top5[0];
+                let imgPath = top.path ? top.path.replace(/\\/g, '/') : '';
+                if (imgPath && !imgPath.startsWith('projects/astro/')) {
+                    imgPath = 'projects/astro/' + imgPath.replace(/^\/+/, '');
+                }
+                imgPath = 'https://chinmaygovind.github.io/' + imgPath;
+                document.getElementById('dsoModalName').textContent = top.name + (top.type ? ' (' + top.type + ')' : '');
+                document.getElementById('dsoModalImg').src = imgPath;
+                document.getElementById('dsoModalImg').style.display = 'block';
+                document.getElementById('dsoModalDesc').textContent = `Top 5 matches:`;
+                // List top 5 matches with image, description, link, and match percent
+                let linksHtml = '<ol style="padding-left:1.2em;">';
+                top5.forEach((res, idx) => {
+                    let p = res.path ? res.path.replace(/\\/g, '/') : '';
+                    if (p && !p.startsWith('projects/astro/')) {
+                        p = 'projects/astro/' + p.replace(/^\/+/, '');
+                    }
+                    p = 'https://chinmaygovind.github.io/' + p;
+                    let percent = res.matchPercent !== undefined ? res.matchPercent : 0;
+                    linksHtml += `<li style='margin-bottom:1.2em;'>`
+                        + `<div style='display:flex; align-items:center;'>`
+                        + `<img src='${p}' alt='${res.name}' style='width:60px; height:60px; object-fit:cover; border-radius:8px; margin-right:1em; border:2px solid #74b9ff;'>`
+                        + `<div style='flex:1;'>`
+                        + `<b>${res.name}${res.type ? ' (' + res.type + ')' : ''}</b><br>`
+                        + `<span style='color:#b8b8b8;'>${res.description ? res.description : ''}</span><br>`
+                        + `<span style='color:#00cec9;'>Match: ${percent}%</span> `
+                        + `<a href='${p}' target='_blank' style='color:#00cec9; margin-left:0.5em;'>View</a>`
+                        + `</div></div></li>`;
+                });
+                linksHtml += '</ol>';
+                document.getElementById('dsoModalLinks').innerHTML = linksHtml;
+            }
+            document.getElementById('dsoModal').style.display = 'flex';
+        }
+        // Close modal on click
+        document.getElementById('dsoModalClose').onclick = function() {
+            document.getElementById('dsoModal').style.display = 'none';
+        };
+            };
+            img.src = URL.createObjectURL(file);
+        }
+
+        // Wait for OpenCV.js to load
+        function waitForOpenCV(callback) {
+            if (typeof cv !== 'undefined' && cv.ORB) {
+                callback();
+            } else {
+                setTimeout(() => waitForOpenCV(callback), 200);
+            }
+        }
+
+        // Downsample image to reduce memory usage and speed up matching
+        function downsampleMat(mat, maxDim=256) {
+            let width = mat.cols, height = mat.rows;
+            let scale = Math.min(1, maxDim / Math.max(width, height));
+            if (scale < 1) {
+                let dsize = new cv.Size(Math.round(width * scale), Math.round(height * scale));
+                let resized = new cv.Mat();
+                cv.resize(mat, resized, dsize, 0, 0, cv.INTER_AREA);
+                return resized;
+            }
+            return mat;
+        }
+    </script>
+</body>
+</html>
