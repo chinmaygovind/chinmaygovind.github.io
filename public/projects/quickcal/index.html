@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCal - Chrome Extension</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Roboto Mono', 'Consolas', 'Monaco', monospace;
+            background: #eaf3fb;
+            color: #22334a;
+            min-height: 100vh;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background:
+                linear-gradient(90deg, rgba(45,127,249,0.07) 1px, transparent 1px),
+                linear-gradient(rgba(45,127,249,0.07) 1px, transparent 1px);
+            background-size: 24px 24px;
+            z-index: -1;
+        }
+        .container {
+            max-width: none;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            background: #fff;
+            border-radius: 0;
+            box-shadow: none;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 0;
+            overflow: hidden;
+        }
+        header {
+            grid-column: 1 / -1;
+            background:
+                linear-gradient(120deg, #2d7ff9 0%, #5bb6ff 100%);
+            color: #fff;
+            padding: 2.5rem 4vw 2rem 4vw;
+            position: relative;
+            border-bottom: 4px solid #1a5fcc;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .title-section { flex: 1; }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 8px #2d7ff955;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #eaf3fb;
+            opacity: 0.95;
+            margin-bottom: 1rem;
+        }
+        .project-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        .badge {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+            padding: 0.3rem 0.9rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid #fff3;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 1px 4px #2d7ff91a;
+        }
+        .header-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+        .install-btn {
+            background: #fff;
+            color: #2d7ff9;
+            padding: 1rem 2.2rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            border: 2px solid #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px #2d7ff91a;
+            transition: all 0.2s;
+        }
+        .install-btn:hover {
+            background: #2d7ff9;
+            color: #fff;
+            border-color: #fff;
+            box-shadow: 0 4px 16px #2d7ff955;
+        }
+        .source-btn {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 1rem 2.2rem;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px #2d7ff91a;
+            transition: all 0.2s;
+        }
+        .source-btn:hover {
+            background: #fff;
+            color: #2d7ff9;
+        }
+        .left-panel {
+            padding: 3vw 3vw 3vw 6vw;
+            background: #fff;
+            border-right: 4px solid #2d7ff9;
+            min-height: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            color: #2d7ff9;
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 900;
+            border-bottom: 2px solid #2d7ff9;
+            padding-bottom: 0.5rem;
+        }
+        .project-overview {
+            margin-bottom: 2rem;
+            font-size: 1.01rem;
+            line-height: 1.7;
+            color: #22334a;
+        }
+        .features-list {
+            display: grid;
+            gap: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        .feature-item {
+            background: #f3f8fe;
+            padding: 1rem 1.2rem;
+            border-radius: 5px;
+            border-left: 4px solid #2d7ff9;
+            transition: all 0.2s;
+        }
+        .feature-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px #2d7ff91a;
+        }
+        .feature-item h4 {
+            color: #22334a;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .feature-item p {
+            color: #4a5a6a;
+            font-size: 0.93rem;
+            line-height: 1.4;
+        }
+        .how-section {
+            margin-top: 2.5rem;
+        }
+        .how-section ol {
+            margin-left: 1.2rem;
+            color: #2d7ff9;
+            font-size: 1.01rem;
+        }
+        .how-section li {
+            margin-bottom: 0.7em;
+            color: #22334a;
+        }
+        .right-panel {
+            padding: 3vw 6vw 3vw 3vw;
+            background: #f3f8fe;
+            display: flex;
+            flex-direction: column;
+            gap: 2.2rem;
+            min-height: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .demo-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .demo-container {
+            background: #fff;
+            border-radius: 6px;
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            border: 2px solid #2d7ff9;
+            box-shadow: 0 4px 15px #2d7ff91a;
+            text-align: center;
+        }
+        .demo-title {
+            color: #2d7ff9;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .demo-img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 2px solid #b3d6ff;
+            box-shadow: 0 2px 8px #2d7ff91a;
+            margin-bottom: 1.2rem;
+        }
+        .demo-description {
+            color: #4a5a6a;
+            font-size: 0.97rem;
+            line-height: 1.4;
+        }
+        .webstore-link {
+            background: #2d7ff9;
+            color: #fff;
+            padding: 1rem 2.2rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px #2d7ff91a;
+            transition: all 0.2s;
+            display: inline-block;
+            margin-top: 1.2rem;
+        }
+        .webstore-link:hover {
+            background: #1a5fcc;
+            color: #fff;
+            box-shadow: 0 4px 16px #2d7ff955;
+        }
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; grid-template-rows: auto 1fr 1fr; height: auto; }
+            .left-panel, .right-panel { padding: 2rem 1.2rem; }
+            header { padding: 2rem 1.2rem 1.2rem 1.2rem; }
+        }
+        @media (max-width: 600px) {
+            .container { margin: 0; border-radius: 0; box-shadow: none; }
+            .left-panel, .right-panel { padding: 1.2rem 0.5rem; }
+            header { padding: 1.2rem 0.5rem 0.8rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="title-section">
+                    <h1>QuickCal</h1>
+                    <p class="subtitle">Add events to Google Calendar instantly from anywhere on the web.</p>
+                    <div class="project-badges">
+                        <span class="badge">Chrome Extension</span>
+                        <span class="badge">Productivity</span>
+                        <span class="badge">Google Calendar</span>
+                        <span class="badge">Open Source</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a class="install-btn" href="https://chromewebstore.google.com/detail/quickcal/jfkmdepogoohiombfhmeoogecjhlajbl" target="_blank" rel="noopener">Install on Chrome</a>
+                </div>
+            </div>
+        </header>
+        <div class="left-panel">
+            <div class="section-title">Project Overview</div>
+            <div class="project-overview">
+                <p><strong>QuickCal</strong> is a Chrome extension that lets you add events to your Google Calendar in seconds, from anywhere on the web. It recognizes dates and times in natural language, so you can create events with just a few clicks.</p>
+                <p>Perfect for students, professionals, and anyone who wants to stay organized without leaving their workflow.</p>
+            </div>
+            <div class="section-title">Key Features</div>
+            <div class="features-list">
+                <div class="feature-item">
+                    <h4>⚡ Instant Event Creation</h4>
+                    <p>Add events to Google Calendar from any page with a right-click or popup.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🧠 Smart Date & Time Parsing</h4>
+                    <p>Understands natural language like "Lunch with Alex tomorrow at 1pm".</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎨 Minimal, Fast UI</h4>
+                    <p>Clean popup interface for quick event entry and confirmation.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🔒 Privacy-Friendly</h4>
+                    <p>No tracking, no ads, and open source code for full transparency.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>👥 Multi-Account Support</h4>
+                    <p>Works with multiple Google accounts seamlessly.</p>
+                </div>
+            </div>
+            <div class="section-title how-section">How it works</div>
+            <ol>
+                <li>Highlight any text on a webpage that represents an event description.</li>
+                <li>Right click the text and click the "Add to Calendar" option in the toolbar.</li>
+                <li>QuickCal will automatically detect the event details and prompt you to confirm.</li>
+            </ol>
+            <p style="margin-top:1.5rem; color:#4a5a6a;">Powered by <strong>Gemini AI</strong> for natural language event parsing.</p>
+        </div>
+        <div class="right-panel">
+            <div class="demo-section">
+                <div class="demo-container">
+                    <div class="demo-title">📸 Demo Screenshot</div>
+                    <img src="demo.png" alt="QuickCal Demo Screenshot" class="demo-img">
+                    <div class="demo-description">See QuickCal in action: highlight text, right-click, and add events to your Google Calendar instantly.</div>
+                    <a class="webstore-link" href="https://chromewebstore.google.com/detail/quickcal/jfkmdepogoohiombfhmeoogecjhlajbl" target="_blank" rel="noopener">Try QuickCal Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
