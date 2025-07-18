@@ -23,13 +23,16 @@
             z-index: -1;
         }
         .container {
-            max-width: 1100px;
-            margin: 40px auto;
+            max-width: none;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
             background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 4px 24px #2d7ff91a;
+            border-radius: 0;
+            box-shadow: none;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.1fr 1fr;
+            grid-template-rows: auto 1fr;
             gap: 0;
             overflow: hidden;
         }
@@ -38,7 +41,7 @@
             background:
                 linear-gradient(120deg, #2d7ff9 0%, #5bb6ff 100%);
             color: #fff;
-            padding: 2.5rem 3rem 2rem 3rem;
+            padding: 2.5rem 4vw 2rem 4vw;
             position: relative;
             border-bottom: 4px solid #1a5fcc;
         }
@@ -125,10 +128,12 @@
             color: #2d7ff9;
         }
         .left-panel {
-            padding: 2.5rem 2.5rem 2.5rem 3rem;
+            padding: 3vw 3vw 3vw 6vw;
             background: #fff;
             border-right: 4px solid #2d7ff9;
-            min-height: 500px;
+            min-height: 0;
+            height: 100%;
+            overflow-y: auto;
         }
         .section-title {
             font-size: 1.2rem;
@@ -186,12 +191,14 @@
             color: #22334a;
         }
         .right-panel {
-            padding: 2.5rem 3rem 2.5rem 2.5rem;
+            padding: 3vw 6vw 3vw 3vw;
             background: #f3f8fe;
             display: flex;
             flex-direction: column;
             gap: 2.2rem;
-            min-height: 500px;
+            min-height: 0;
+            height: 100%;
+            overflow-y: auto;
         }
         .demo-section {
             flex: 1;
@@ -215,7 +222,8 @@
         }
         .demo-img {
             width: 100%;
-            max-width: 350px;
+            max-width: 100%;
+            height: auto;
             border-radius: 6px;
             border: 2px solid #b3d6ff;
             box-shadow: 0 2px 8px #2d7ff91a;
@@ -248,7 +256,7 @@
             box-shadow: 0 4px 16px #2d7ff955;
         }
         @media (max-width: 900px) {
-            .container { grid-template-columns: 1fr; }
+            .container { grid-template-columns: 1fr; grid-template-rows: auto 1fr 1fr; height: auto; }
             .left-panel, .right-panel { padding: 2rem 1.2rem; }
             header { padding: 2rem 1.2rem 1.2rem 1.2rem; }
         }
