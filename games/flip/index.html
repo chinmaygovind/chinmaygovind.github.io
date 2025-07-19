@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flip - The Game</title>
+    <style>
+        .main-layout {
+            display: flex;
+            flex-direction: row;
+            min-height: 90vh;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .sidebar {
+            flex: 0 0 340px;
+            text-align: left;
+            margin-top: 40px;
+        }
+
+    body {
+        font-family: 'Oswald', Arial, sans-serif;
+        background: #a97c50 url('https://www.transparenttextures.com/patterns/wood-pattern.png') repeat;
+        background-size: 400px 400px;
+        color: #222;
+        text-align: center;
+    }
+        .sidebar h1 {
+            font-family: 'Oswald', Arial, sans-serif;
+            font-size: 2.3em;
+            margin-bottom: 0.2em;
+            color: #2d1c0b;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0 #fff8, 2px 2px 0 #e0c69a;
+        }
+        .instructions {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 18px #0002, 0 0 0 2px #b0b0b0 inset;
+            padding: 18px 20px 14px 20px;
+            font-size: 1.13em;
+            margin-bottom: 18px;
+            color: #2d1c0b;
+            line-height: 1.7;
+            font-family: 'Oswald', Arial, sans-serif;
+            position: relative;
+            border: 1.5px solid #b0b0b0;
+            background-image: repeating-linear-gradient(to bottom, #e3e9f7 0 2px, transparent 2px 32px);
+        }
+        .game-area {
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 40px;
+        }
+        .card-anim { position: fixed; z-index: 1000; width: 80px; height: 120px; background: #fff; color: #222; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5em; box-shadow: 0 8px 24px #0005, 0 2px 8px #0008; pointer-events: none; transition: left 0.5s, top 0.5s; font-family: 'Shadows Into Light', 'Caveat', Arial, sans-serif; border: 1.5px solid #b0b0b0; }
+        #deck-visual {
+            position: relative;
+            width: 80px;
+            height: 120px;
+            background: repeating-linear-gradient(135deg, #1a237e 0 12px, #3949ab 12px 24px);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px #000a, 2px 2px 0 #fff8 inset;
+            border: 2px solid #fff;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #deck-visual::before {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            width: 60px;
+            height: 100px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 1px 2px #fff4 inset;
+        }
+        #deck-visual::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 80px;
+            height: 120px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 0 #2228 inset;
+            pointer-events: none;
+        }
+        #deck-area {
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+        }
+        #deck-count-label {
+            font-size: 1.2em;
+            color: #fff;
+            min-width: 80px;
+            text-align: left;
+            margin-left: 12px;
+        }
+        .pile.flash-correct { box-shadow: 0 0 16px 6px #4caf50; animation: flash-correct 0.5s; }
+        .pile.flash-wrong { box-shadow: 0 0 16px 6px #f44336; animation: flash-wrong 0.5s; }
+        @keyframes flash-correct { 0%{box-shadow:0 0 0 0 #4caf50;} 50%{box-shadow:0 0 16px 6px #4caf50;} 100%{box-shadow:0 0 0 0 #4caf50;} }
+        @keyframes flash-wrong { 0%{box-shadow:0 0 0 0 #f44336;} 30%{transform:translateX(-8px);} 60%{transform:translateX(8px);} 100%{box-shadow:0 0 0 0 #f44336;transform:translateX(0);} }
+        /* Remove duplicate/old body style, keep only the classroom/desk style below */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 110px);
+            grid-gap: 24px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .pile {
+            background: #fff;
+            color: #222;
+            border-radius: 10px;
+            height: 150px;
+            width: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 8px 24px #0003, 0 1.5px 0 #bfa14a inset;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border: 1.5px solid #b0b0b0;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .pile.face-down { background: #444; color: #888; cursor: not-allowed; }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin: auto;
+            margin-left: 0;
+            margin-right: 0;
+            height: 100%;
+        }
+        .deck { margin: 10px 0; font-size: 1.2em; }
+        .selected { outline: 3px solid #2196f3; }
+        button {
+            margin: 0;
+            padding: 10px 22px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+            color: #fff;
+            cursor: pointer;
+            min-width: 100px;
+            font-family: 'Oswald', Arial, sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px #0002;
+            transition: background 0.2s, transform 0.1s;
+        }
+        button:hover:not(:disabled) {
+            background: linear-gradient(90deg, #1565c0 60%, #64b5f6 100%);
+            transform: translateY(-2px) scale(1.04);
+        }
+        button:disabled { background: #888; cursor: not-allowed; }
+        .restart-btn {
+            background: linear-gradient(90deg, #d32f2f 60%, #ff5252 100%) !important;
+            color: #fff !important;
+            border: none !important;
+            box-shadow: 0 2px 8px #d32f2f33;
+        }
+        .restart-btn:hover:not(:disabled) {
+            background: linear-gradient(90deg, #b71c1c 60%, #ff1744 100%) !important;
+        }
+        .message {
+            margin: 20px 0;
+            font-size: 1.1em;
+            min-height: 2.5em;
+            background: #fffbe8cc;
+            border: 2px solid #e0c68a;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px #0001;
+            padding: 16px 20px;
+            width: 320px;
+            max-width: 90vw;
+            text-align: center;
+            font-family: Oswald, Arial, sans-serif;
+            transition: background 0.2s, border 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-layout">
+        <div class="sidebar">
+            <h1>Flip Card Game</h1>
+            <div class="instructions">
+                <b>How to Play:</b><br>
+                1. Nine cards are dealt face up in a 3x3 grid.<br>
+                2. On your turn, pick a pile and guess if the next card from the deck will be higher or lower.<br>
+                3. If correct, the new card covers the pile and you continue. If wrong, the pile is lost.<br>
+                4. Try to get through the whole deck before losing all piles! <br>
+                Note: Ace is treated as the highest card. 
+            </div>
+            <div class="message" id="message">Click a pile to begin!</div>
+            <div style="display:flex; justify-content:center; width:100%;">
+                <button id="restart-btn" class="restart-btn" style="margin-top:40px; min-width:240px; font-size:1.15em; padding:14px 36px;" onclick="startGame()" disabled>Restart Game</button>
+            </div>
+                
+        </div>
+        <div class="game-area">
+            <div style="display:flex; flex-direction:row; align-items:flex-start; gap:40px; width:100%; justify-content:center;">
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <div class="deck" id="deck-area">
+                        <div id="deck-visual"></div>
+                        <span id="deck-count-label"><span id="deck-count">52</span> Cards left</span>
+                    </div>
+                    <div class="grid" id="grid"></div>
+                </div>
+                <div class="controls">
+                    <button id="higher" style="min-width:220px; font-size:1.18em;" disabled>Higher</button>
+                    <button id="lower" style="min-width:220px; font-size:1.18em;" disabled>Lower</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+// Card utilities
+const suits = ['♠', '♥', '♦', '♣'];
+const values = [2,3,4,5,6,7,8,9,10,'J','Q','K','A'];
+function createDeck() {
+    let deck = [];
+    for (let s of suits) {
+        for (let v of values) {
+            deck.push({s, v, n: typeof v === 'number' ? v : (v==='A'?14:v==='K'?13:v==='Q'?12:11)});
+        }
+    }
+    return deck;
+}
+function shuffle(deck) {
+    for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+    return deck;
+}
+    </script>
+
+
+    <script>
+
+    // Game state
+    let deck = [], piles = [], faceDown = [], selectedPile = null, gameOver = false, animating = false;
+
+    // Helper: get absolute position of an element
+    function getAbsPos(el) {
+        const rect = el.getBoundingClientRect();
+        return { left: rect.left + window.scrollX, top: rect.top + window.scrollY };
+    }
+
+    async function animateDeal() {
+        for (let i = 0; i < 9; i++) {
+            await animateCardFromDeckToPile(deck[i], i, true);
+        }
+        // Enable restart button after dealing
+        document.getElementById('restart-btn').disabled = false;
+    }
+
+    function render() {
+        document.getElementById('deck-count').textContent = deck.length;
+        // Make the entire deck visual (border, shadow, etc.) fully transparent if deck is empty
+        const deckVisual = document.getElementById('deck-visual');
+        if (deck.length === 0) {
+            deckVisual.style.background = 'transparent';
+            deckVisual.style.border = '2px solid transparent';
+            deckVisual.style.boxShadow = 'none';
+            deckVisual.style.opacity = '0';
+            deckVisual.innerHTML = '';
+        } else {
+            deckVisual.style.background = 'repeating-linear-gradient(135deg, #1a237e 0 12px, #3949ab 12px 24px)';
+            deckVisual.style.border = '2px solid #fff';
+            deckVisual.style.boxShadow = '0 4px 16px #000a, 2px 2px 0 #fff8 inset';
+            deckVisual.style.opacity = '1';
+            deckVisual.innerHTML = '';
+        }
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        for (let i = 0; i < 9; i++) {
+            const pile = document.createElement('div');
+            pile.className = 'pile' + (faceDown[i] ? ' face-down' : '') + (selectedPile===i ? ' selected' : '');
+            pile.textContent = faceDown[i] ? '🂠' : (piles[i] ? piles[i].v + piles[i].s : '');
+            pile.id = 'pile-' + i;
+            pile.onclick = () => selectPile(i);
+            if (faceDown[i] || !piles[i] || gameOver) pile.onclick = null;
+            grid.appendChild(pile);
+        }
+        document.getElementById('higher').disabled = selectedPile===null || gameOver;
+        document.getElementById('lower').disabled = selectedPile===null || gameOver;
+        // Set initial message if game just started
+        if (!gameOver && deck.length === 43 && faceDown.every(f => !f)) {
+            document.getElementById('message').textContent = 'Click a pile to begin!';
+        }
+    }
+
+    function selectPile(i) {
+        if (faceDown[i] || !piles[i] || gameOver || animating) return;
+        selectedPile = i;
+        render();
+    }
+
+    async function guess(higher) {
+        if (selectedPile===null || gameOver || animating) return;
+        if (deck.length === 0) return;
+        // Immediately gray out the buttons
+        document.getElementById('higher').disabled = true;
+        document.getElementById('lower').disabled = true;
+        animating = true;
+        const oldCard = piles[selectedPile];
+        const newCard = deck.shift();
+        await animateCardFromDeckToPile(newCard, selectedPile, false);
+        let correct = (higher && newCard.n > oldCard.n) || (!higher && newCard.n < oldCard.n);
+        piles[selectedPile] = newCard;
+        if (!correct) {
+            faceDown[selectedPile] = true;
+            showPileFeedback(selectedPile, false);
+            document.getElementById('message').textContent = `❌ Wrong! Pile ${selectedPile+1} is lost.`;
+        } else {
+            showPileFeedback(selectedPile, true);
+            document.getElementById('message').textContent = `✅ Correct!`;
+        }
+        selectedPile = null;
+        checkGameEnd();
+        render();
+        animating = false;
+    }
+
+    function showPileFeedback(idx, correct) {
+        const pile = document.getElementById('pile-' + idx);
+        if (!pile) return;
+        pile.classList.remove('flash-correct', 'flash-wrong');
+        void pile.offsetWidth; // force reflow
+        pile.classList.add(correct ? 'flash-correct' : 'flash-wrong');
+        setTimeout(() => pile.classList.remove('flash-correct', 'flash-wrong'), 600);
+    }
+
+    async function animateCardFromDeckToPile(card, pileIdx, isDealing) {
+        const deckEl = document.getElementById('deck-visual');
+        const pileEl = document.getElementById('pile-' + pileIdx);
+        if (!deckEl || !pileEl) return;
+        const deckPos = getAbsPos(deckEl);
+        const pilePos = getAbsPos(pileEl);
+        const anim = document.createElement('div');
+        anim.className = 'card-anim';
+        anim.textContent = card.v + card.s;
+        anim.style.left = deckPos.left + 'px';
+        anim.style.top = deckPos.top + 'px';
+        anim.style.fontFamily = 'Playfair Display, serif';
+        anim.style.fontWeight = '700';
+        document.body.appendChild(anim);
+        await new Promise(res => setTimeout(res, 30));
+        anim.style.left = pilePos.left + 'px';
+        anim.style.top = pilePos.top + 'px';
+        await new Promise(res => setTimeout(res, 500));
+        document.body.removeChild(anim);
+        if (isDealing) {
+            piles[pileIdx] = card;
+            render();
+        }
+    }
+
+    function checkGameEnd() {
+        if (deck.length === 0) {
+            const pilesLeft = piles.filter((p, i) => p && !faceDown[i]).length;
+            document.getElementById('message').textContent = `You win! You finished the deck with ${pilesLeft} pile${pilesLeft === 1 ? '' : 's'} left.`;
+            gameOver = true;
+        } else if (faceDown.every(f => f)) {
+            document.getElementById('message').textContent = 'Game Over! All piles lost.';
+            gameOver = true;
+        }
+    }
+
+    document.getElementById('higher').onclick = () => guess(true);
+    document.getElementById('lower').onclick = () => guess(false);
+
+    async function startGame() {
+        deck = shuffle(createDeck());
+        piles = Array(9).fill(null);
+        faceDown = [false,false,false,false,false,false,false,false,false];
+        selectedPile = null;
+        gameOver = false;
+        document.getElementById('message').textContent = 'Dealing piles...';
+        document.getElementById('restart-btn').disabled = true;
+        render();
+        await animateDeal();
+        deck = deck.slice(9); // Remove dealt cards from deck
+        render();
+    }
+
+    
+    // Start game on load
+    window.onload = startGame;
+    </script>
+</body>
+</html>
