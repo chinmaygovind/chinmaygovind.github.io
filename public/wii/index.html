@@ -2,19 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" href="../favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
       content="Web site created using create-react-app"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" href="../logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="manifest" href="../manifest.json" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -53,9 +53,9 @@
   <body style = "background-color: black; overflow-y: hidden">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <img id = "warning" class="fade-in" src = "images/warning.png" onclick="goToMenu()"></img>
-    <div id = "root" class = "fade-in"></div>
-    <audio id="clickSounds" src="audio/warning.wav"></audio>
-    <audio id="backgroundMusic" src="audio/wiimenu.mp3" loop></audio>
+  <div id="root" class="fade-in"></div>
+  <audio id="clickSounds" src="audio/warning.wav"></audio>
+  <audio id="backgroundMusic" src="audio/wiimenu.mp3" loop></audio>
   </body>
   <script>
     var warningLoaded = false;
@@ -84,14 +84,104 @@
     function startMenu() {
       document.getElementById("root").style.display = "inline";
       setTimeout(() => {
-      document.getElementById("warning").remove();
+        document.getElementById("warning").remove();
         document.title = "Wii Menu";
         const root = document.getElementById("root");
-        root.classList.add('active');        
+        root.classList.add('active');
         var bgm = document.getElementById("backgroundMusic");
         bgm.play();
         var clickSound = document.getElementById("clickSounds");
         clickSound.src = "audio/channelClicked.wav";
+        // Inject Wii menu HTML
+        root.innerHTML = `
+          <div id="channels-container">
+            <div id="channels">
+              <img src="images/wiimenu.png" style="position: absolute; top: 0; left: 0; width: 100%; z-index: 1;">
+              <video src="videos/channels/channel0.mp4" autoplay loop muted id="channel-0" style="z-index: 0; position: relative; float: left; margin: 2.5% 0% 0 8%; width: 21%; height: 21%;"></video>
+              <video src="videos/channels/channel1.mp4" autoplay loop muted id="channel-1" style="z-index: 0; position: relative; float: left; margin: 4.45% 0 0 0%; width: 21%; height: 21%;"></video>
+              <video src="videos/channels/channel2.mp4" autoplay loop muted id="channel-2" style="z-index: 0; position: relative; float: left; margin: 4.4% 0% 0 0%; width: 21%; height: 21%;"></video>
+              <video src="videos/channels/channel3.mp4" autoplay loop muted id="channel-3" style="z-index: 0; position: relative; float: left; margin: 4% 0 0 0%; width: 22%; height: 21%;"></video>
+              <video src="videos/channels/channel4.mp4" autoplay loop muted id="channel-4" style="z-index: 0; position: relative; float: left; margin: 0.45% 0 0 8%; width: 21%; height: 24%;"></video>
+              <video src="videos/channels/channel5.mp4" autoplay loop muted id="channel-5" style="z-index: 0; position: relative; float: left; margin: 0% 0 0 0%; width: 21%; height: 21%;"></video>
+              <video src="videos/channels/channel6.mp4" autoplay loop muted id="channel-6" style="z-index: 0; position: relative; float: left; margin: 0% 0 0 0%; width: 21%; height: 21%;"></video>
+              <video src="videos/channels/channel7.mp4" autoplay loop muted id="channel-7" style="z-index: 0; position: relative; float: left; margin: 0% 0 0 0%; width: 21%; height: 21%;"></video>
+            </div>
+          </div>
+          <img id="startmenu" src="images/channels/startmenu0.png" style="opacity:0; position:fixed; top:0; left:0; width:100vw; height:100vh; transform:scale(0.01); z-index:10; transition:transform 0.5s, opacity 0.25s ease-in;">
+        `;
+        // Wii menu logic
+        let state = "WII_MENU";
+        let currentChannel = -1;
+        root.addEventListener("click", function(e) {
+          if (state === "WII_MENU") {
+            let x = e.clientX / window.innerWidth;
+            let y = e.clientY / window.innerHeight;
+            for (let i = 0; i < 8; i++) {
+              let channelX = i % 4;
+              let channelY = Math.floor(i / 4);
+              let lowX = (0.08 + 0.21 * channelX);
+              let highX = lowX + 0.21;
+              let lowY = (0.04 + 0.25 * channelY);
+              let highY = lowY + 0.25;
+              if (lowX < x && x < highX && lowY < y && y < highY) {
+                currentChannel = i;
+                let scale = 8;
+                let channels = document.getElementById('channels');
+                let targetX = window.innerWidth * (0.16 + 0.23 * channelX);
+                let targetY = window.innerHeight * (lowY + highY) / 2;
+                channels.style.transformOrigin = targetX + 'px ' + targetY + 'px';
+                channels.style.transform = 'scale(' + scale + ')';
+                channels.style.transition = 'transform 0.5s, opacity 0.25s ease-in';
+                channels.style.opacity = '0';
+                let startmenu = document.getElementById("startmenu");
+                startmenu.style.zIndex = 10;
+                startmenu.style.opacity = 1;
+                startmenu.style.width = "100vw";
+                startmenu.style.height = "100vh";
+                startmenu.style.transform = "scale(1)";
+                startmenu.style.transition = 'transform 0.5s, opacity 0.25s ease-in';
+                startmenu.src = `images/channels/startmenu${i}.png`;
+                var clickSound = document.getElementById("clickSounds");
+                clickSound.play();
+                var bgm = document.getElementById("backgroundMusic");
+                bgm.pause();
+                setTimeout(() => {
+                  bgm.src = `audio/channels/channel${currentChannel}.mp3`;
+                  bgm.removeAttribute("loop");
+                  bgm.play();
+                }, 250);
+              }
+            }
+            setTimeout(() => state = "START_MENU", 100);
+          }
+          if (state === "START_MENU") {
+            let x = e.clientX / window.innerWidth;
+            let y = e.clientY / window.innerHeight;
+            let clickState = "NONE";
+            if (0.2 < x && x < 0.48 && 0.8 < y && y < 0.93) clickState = "LEFT";
+            if (0.52 < x && x < 0.8 && 0.8 < y && y < 0.93) clickState = "RIGHT";
+            if (clickState !== "NONE") {
+              var bgm = document.getElementById("backgroundMusic");
+              bgm.pause();
+              var clickSound = document.getElementById("clickSounds");
+              clickSound.src = "audio/refresh.wav";
+              clickSound.play();
+              setTimeout(() => {
+                root.classList.remove('fade-in');
+                root.classList.add('fade-out');
+              }, 500);
+              if (clickState === "LEFT") {
+                setTimeout(() => {
+                  window.location.reload();
+                }, 2500);
+              } else if (clickState === "RIGHT") {
+                setTimeout(() => {
+                  window.location.href = "warning.html";
+                }, 2500);
+              }
+            }
+          }
+        });
       }, 3000);
     }
   </script>
