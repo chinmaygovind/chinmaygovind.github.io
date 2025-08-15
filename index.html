@@ -67,6 +67,49 @@
 			padding: 1.5rem;
 			box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 		}
+		.projects-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+			gap: 1rem;
+			margin-top: 1rem;
+		}
+		.project-tile {
+			aspect-ratio: 1;
+			background: #f8f9fa;
+			border-radius: 8px;
+			padding: 1rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			transition: transform 0.2s, box-shadow 0.2s;
+			border: 2px solid transparent;
+			cursor: pointer;
+			text-decoration: none;
+			color: inherit;
+		}
+		.project-tile:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+			border-color: #3c85d8;
+		}
+		.project-icon {
+			font-size: 2.5rem;
+			margin-bottom: 0.5rem;
+		}
+		.project-title {
+			font-weight: 700;
+			color: #2c3e50;
+			margin-bottom: 0.5rem;
+			font-size: 0.9rem;
+			line-height: 1.2;
+		}
+		.project-description {
+			font-size: 0.8rem;
+			color: #666;
+			line-height: 1.3;
+		}
 		.resume-section {
 			flex: 1;
 			background: rgba(255, 255, 255, 0.9);
@@ -81,31 +124,6 @@
 			margin-bottom: 1rem;
 			border-bottom: 2px solid #3c85d8;
 			padding-bottom: 0.5rem;
-		}
-		.project-item {
-			margin-bottom: 1rem;
-			padding: 1rem;
-			background: #f8f9fa;
-			border-radius: 8px;
-			border-left: 4px solid #3c85d8;
-		}
-		.project-title {
-			font-weight: 700;
-			color: #2c3e50;
-			margin-bottom: 0.5rem;
-		}
-		.project-description {
-			font-size: 0.9rem;
-			color: #666;
-			margin-bottom: 0.5rem;
-		}
-		.project-link {
-			color: #3c85d8;
-			text-decoration: none;
-			font-weight: 600;
-		}
-		.project-link:hover {
-			text-decoration: underline;
 		}
 		.resume-preview {
 			width: 100%;
@@ -255,17 +273,25 @@
 				text-align: center;
 			}
 			
-			.project-item {
+			.projects-grid {
+				grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+				gap: 0.8rem;
+			}
+			
+			.project-tile {
 				padding: 0.8rem;
-				margin-bottom: 0.8rem;
+			}
+			
+			.project-icon {
+				font-size: 2rem;
 			}
 			
 			.project-title {
-				font-size: 1rem;
+				font-size: 0.8rem;
 			}
 			
 			.project-description {
-				font-size: 0.85rem;
+				font-size: 0.7rem;
 			}
 			
 			.resume-preview {
@@ -299,8 +325,25 @@
 				font-size: 1.2rem;
 			}
 			
-			.project-item {
+			.projects-grid {
+				grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+				gap: 0.6rem;
+			}
+			
+			.project-tile {
 				padding: 0.6rem;
+			}
+			
+			.project-icon {
+				font-size: 1.8rem;
+			}
+			
+			.project-title {
+				font-size: 0.75rem;
+			}
+			
+			.project-description {
+				font-size: 0.65rem;
 			}
 			
 			.resume-preview {
@@ -344,25 +387,72 @@
 	<main class="main-content">
 		<section class="projects-section">
 			<h2 class="section-title">Projects</h2>
-			<div class="project-item">
-				<div class="project-title">Bridge Physics Simulator</div>
-				<div class="project-description">Interactive bridge design and physics simulation game</div>
-				<a href="games/bridge/" class="project-link">View Project →</a>
-			</div>
-			<div class="project-item">
-				<div class="project-title">Astronomy Calculator</div>
-				<div class="project-description">Deep space object calculator and visualization tool</div>
-				<a href="projects/astro/" class="project-link">View Project →</a>
-			</div>
-			<div class="project-item">
-				<div class="project-title">QuickCal</div>
-				<div class="project-description">Fast calendar and scheduling application</div>
-				<a href="projects/quickcal/" class="project-link">View Project →</a>
-			</div>
-			<div class="project-item">
-				<div class="project-title">Robot Tour</div>
-				<div class="project-description">Interactive robot navigation and pathfinding demo</div>
-				<a href="projects/robot-tour/" class="project-link">View Project →</a>
+			<div class="projects-grid">
+				<a href="projects/quickcal/" class="project-tile">
+					<div class="project-icon">📅</div>
+					<div class="project-title">QuickCal</div>
+					<div class="project-description">Fast calendar & scheduling app</div>
+				</a>
+				<a href="games/bridge/" class="project-tile">
+					<div class="project-icon">🌉</div>
+					<div class="project-title">Bridge Sim</div>
+					<div class="project-description">Physics simulation game</div>
+				</a>
+				<a href="projects/astro/" class="project-tile">
+					<div class="project-icon">🚀</div>
+					<div class="project-title">AstroGPT</div>
+					<div class="project-description">Deep space calculator</div>
+				</a>
+				<a href="projects/ibec/" class="project-tile">
+					<div class="project-icon">🏢</div>
+					<div class="project-title">IBEC</div>
+					<div class="project-description">Business consulting site</div>
+				</a>
+				<a href="#" class="project-tile">
+					<div class="project-icon">📚</div>
+					<div class="project-title">CIS 1600</div>
+					<div class="project-description">PrairieLearn exercises</div>
+				</a>
+				<a href="#" class="project-tile">
+					<div class="project-icon">⚡</div>
+					<div class="project-title">Penn Electric Racing</div>
+					<div class="project-description">Formula SAE team</div>
+				</a>
+				<a href="projects/robot-tour/" class="project-tile">
+					<div class="project-icon">🤖</div>
+					<div class="project-title">Robot Tour</div>
+					<div class="project-description">Navigation demo</div>
+				</a>
+				<a href="#" class="project-tile">
+					<div class="project-icon">🧮</div>
+					<div class="project-title">Project Euler</div>
+					<div class="project-description">Math problem solutions</div>
+				</a>
+				<a href="#" class="project-tile">
+					<div class="project-icon">🔮</div>
+					<div class="project-title">Ex Futuro</div>
+					<div class="project-description">Future tech exploration</div>
+				</a>
+				<a href="wii/channels/codebusters/" class="project-tile">
+					<div class="project-icon">🔓</div>
+					<div class="project-title">Codebusters</div>
+					<div class="project-description">Science Olympiad tool</div>
+				</a>
+				<a href="wii/" class="project-tile">
+					<div class="project-icon">🎮</div>
+					<div class="project-title">Wii Channel</div>
+					<div class="project-description">Interactive Wii menu</div>
+				</a>
+				<a href="wii/channels/music/" class="project-tile">
+					<div class="project-icon">🎵</div>
+					<div class="project-title">Music Demos</div>
+					<div class="project-description">Audio compositions</div>
+				</a>
+				<a href="wii/channels/mii/" class="project-tile">
+					<div class="project-icon">👤</div>
+					<div class="project-title">About Mii</div>
+					<div class="project-description">Escape game portfolio</div>
+				</a>
 			</div>
 		</section>
 		
