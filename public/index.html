@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chinmay Govind | Portfolio</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+	<style>
+		body {
+			margin: 0;
+			font-family: 'Roboto', Arial, sans-serif;
+			background: linear-gradient(120deg, #1e3c72, #2a5298);
+			color: #fff;
+			min-height: 100vh;
+		}
+		header {
+			text-align: center;
+			padding: 2rem 1rem 1rem 1rem;
+		}
+		.container {
+			max-width: 900px;
+			margin: auto;
+			background: rgba(30, 60, 114, 0.85);
+			border-radius: 16px;
+			box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+			padding: 2rem;
+		}
+		section {
+			margin-bottom: 2.5rem;
+		}
+		.me-section {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 2rem;
+		}
+		.me-photo {
+			flex: 0 0 120px;
+			width: 120px;
+			height: 120px;
+			border-radius: 50%;
+			object-fit: cover;
+			border: 3px solid #fff;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+			background: #eee;
+		}
+		.me-info {
+			flex: 1;
+		}
+		.social-links a {
+			margin-right: 1rem;
+			color: #ffd700;
+			font-size: 1.5rem;
+			text-decoration: none;
+			transition: color 0.2s;
+		}
+		.social-links a:hover {
+			color: #fff;
+		}
+		.resume-section ul {
+			list-style: none;
+			padding: 0;
+		}
+		.resume-section li {
+			margin-bottom: 0.5rem;
+		}
+		.projects-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			gap: 1.5rem;
+		}
+		.project-card {
+			background: rgba(255,255,255,0.08);
+			border-radius: 10px;
+			padding: 1rem;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+			color: #fff;
+			transition: transform 0.2s;
+		}
+		.project-card:hover {
+			transform: translateY(-4px) scale(1.03);
+			background: rgba(255,255,255,0.15);
+		}
+		.resume-download {
+			display: inline-block;
+			margin-top: 1rem;
+			padding: 0.5rem 1.2rem;
+			background: #ffd700;
+			color: #1e3c72;
+			border-radius: 6px;
+			text-decoration: none;
+			font-weight: bold;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+			transition: background 0.2s;
+		}
+		.resume-download:hover {
+			background: #fff;
+			color: #2a5298;
+		}
+		.hobbies-section {
+			text-align: center;
+			padding-bottom: 1rem;
+			font-size: 1.1rem;
+			color: #ffd700;
+		}
+		@media (max-width: 600px) {
+			.container {
+				padding: 1rem;
+			}
+			.me-section {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+			.me-photo {
+				margin-bottom: 1rem;
+			}
+			.projects-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<h1>Chinmay Govind</h1>
+		<p>Professional Portfolio</p>
+	</header>
+	<div class="container">
+		<section class="me-section">
+			<img src="images/mii/cv.png" alt="Chinmay Govind" class="me-photo">
+			<div class="me-info">
+				<h2>About Me</h2>
+				<p>Hi! I'm Chinmay Govind, a passionate developer and problem solver. Reach out to me below!</p>
+				<div><strong>Email:</strong> <a href="mailto:your.email@example.com">your.email@example.com</a></div>
+				<div><strong>Phone:</strong> <a href="tel:+1234567890">+1 (234) 567-890</a></div>
+				<div class="social-links">
+					<a href="https://github.com/chinmaygovind" target="_blank" title="GitHub"><span>🐙</span></a>
+					<a href="https://linkedin.com/in/chinmaygovind" target="_blank" title="LinkedIn"><span>🔗</span></a>
+					<a href="https://twitter.com/chinmaygovind" target="_blank" title="Twitter"><span>🐦</span></a>
+				</div>
+			</div>
+		</section>
+
+		<section class="projects-section">
+			<h2>Projects</h2>
+			<div class="projects-grid">
+				<div class="project-card">
+					<h3>Project One</h3>
+					<p>Short description of your project. <a href="#">View More</a></p>
+				</div>
+				<div class="project-card">
+					<h3>Project Two</h3>
+					<p>Short description of your project. <a href="#">View More</a></p>
+				</div>
+				<div class="project-card">
+					<h3>Project Three</h3>
+					<p>Short description of your project. <a href="#">View More</a></p>
+				</div>
+				<!-- Add more project cards as needed -->
+			</div>
+		</section>
+
+		<section class="resume-section">
+			<h2>Resume</h2>
+			<a href="resume.pdf" class="resume-download" download>Download PDF</a>
+			<h3>Skills</h3>
+			<ul>
+				<li>JavaScript, React, Node.js</li>
+				<li>Python, Django</li>
+				<li>HTML, CSS, SASS</li>
+				<li>Git, CI/CD</li>
+				<!-- Add more skills -->
+			</ul>
+			<h3>Achievements & Awards</h3>
+			<ul>
+				<li>Winner, XYZ Hackathon 2024</li>
+				<li>Dean's List, ABC University</li>
+				<!-- Add more achievements -->
+			</ul>
+			<h3>Education</h3>
+			<ul>
+				<li>B.Sc. in Computer Science, ABC University (2021-2025)</li>
+				<!-- Add more education -->
+			</ul>
+			<h3>Certifications</h3>
+			<ul>
+				<li>Certified AWS Solutions Architect</li>
+				<li>Google Data Analytics Professional Certificate</li>
+				<!-- Add more certifications -->
+			</ul>
+		</section>
+
+		<section class="hobbies-section">
+			<h2>Hobbies & Interests</h2>
+			<p>Coding, Music, Gaming, Traveling, Photography</p>
+		</section>
+	</div>
+</body>
+</html>
