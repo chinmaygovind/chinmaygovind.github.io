@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="musicGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Music note circle -->
+  <circle cx="32" cy="32" r="25" fill="url(#musicGradient)" stroke="#a93226" stroke-width="2"/>
+  <!-- Large music note -->
+  <circle cx="25" cy="35" r="4" fill="white"/>
+  <rect x="29" y="20" width="2" height="19" fill="white"/>
+  <!-- Musical staff lines -->
+  <line x1="12" y1="45" x2="52" y2="45" stroke="white" stroke-width="1" opacity="0.8"/>
+  <line x1="12" y1="50" x2="52" y2="50" stroke="white" stroke-width="1" opacity="0.8"/>
+  <line x1="12" y1="55" x2="52" y2="55" stroke="white" stroke-width="1" opacity="0.8"/>
+  <!-- Additional notes -->
+  <circle cx="40" cy="28" r="2.5" fill="white"/>
+  <rect x="42.5" y="18" width="1.5" height="12" fill="white"/>
+  <!-- Treble clef representation -->
+  <path d="M15 22 C18 20 20 25 18 28 C16 30 15 28 15 26 C15 24 16 22 18 20" 
+        fill="white" opacity="0.9"/>
+  <!-- Sound waves -->
+  <path d="M45 25 Q50 20 55 25" fill="none" stroke="white" stroke-width="1.5" opacity="0.7"/>
+  <path d="M45 32 Q52 27 58 32" fill="none" stroke="white" stroke-width="1.5" opacity="0.7"/>
+  <path d="M45 39 Q50 34 55 39" fill="none" stroke="white" stroke-width="1.5" opacity="0.7"/>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="electricGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#f1c40f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  <!-- Car body -->
+  <path d="M8 35 L12 25 L52 25 L56 35 L56 45 L8 45 Z" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+  <!-- Windshield -->
+  <polygon points="14,25 20,20 44,20 50,25" fill="#3498db" opacity="0.7"/>
+  <!-- Wheels -->
+  <circle cx="18" cy="45" r="6" fill="#2c3e50" stroke="#34495e" stroke-width="2"/>
+  <circle cx="46" cy="45" r="6" fill="#2c3e50" stroke="#34495e" stroke-width="2"/>
+  <circle cx="18" cy="45" r="3" fill="#95a5a6"/>
+  <circle cx="46" cy="45" r="3" fill="#95a5a6"/>
+  <!-- Lightning bolt -->
+  <polygon points="32,30 28,35 30,35 26,42 30,37 28,37 32,30" fill="url(#electricGradient)"/>
+  <!-- Racing stripes -->
+  <rect x="20" y="28" width="2" height="12" fill="white"/>
+  <rect x="42" y="28" width="2" height="12" fill="white"/>
+  <!-- PER text -->
+  <text x="32" y="40" text-anchor="middle" fill="white" font-family="Arial" font-size="6" font-weight="bold">PER</text>
+</svg>
