@@ -96,8 +96,12 @@
 			border-color: #3c85d8;
 		}
 		.project-icon {
-			font-size: 2.5rem;
+			height: 48px;
 			margin-bottom: 0.5rem;
+			transition: transform 0.2s;
+		}
+		.project-tile:hover .project-icon {
+			transform: scale(1.1);
 		}
 		.project-title {
 			font-weight: 700;
@@ -110,7 +114,79 @@
 			font-size: 0.8rem;
 			color: #666;
 			line-height: 1.3;
+			margin-bottom: 0.5rem;
 		}
+		.project-tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.3rem;
+			justify-content: center;
+		}
+		.tech-tag {
+			background: #6c757d;
+			color: white;
+			font-size: 0.65rem;
+			padding: 0.2rem 0.4rem;
+			border-radius: 4px;
+			font-weight: 600;
+		}
+		/* QuickCal - Blue tones */
+		.tech-tag.quickcal-1 { background: #3498db; color: white; }
+		.tech-tag.quickcal-2 { background: #2980b9; color: white; }
+		.tech-tag.quickcal-3 { background: #1f4e79; color: white; }
+		
+		/* Bridge - Orange/Brown tones */
+		.tech-tag.bridge-1 { background: #e67e22; color: white; }
+		.tech-tag.bridge-2 { background: #d35400; color: white; }
+		.tech-tag.bridge-3 { background: #a04000; color: white; }
+		
+		/* AstroGPT - Dark space tones */
+		.tech-tag.astro-1 { background: #2c3e50; color: white; }
+		.tech-tag.astro-2 { background: #34495e; color: white; }
+		.tech-tag.astro-3 { background: #1a252f; color: white; }
+		
+		/* IBEC - Green business tones */
+		.tech-tag.ibec-1 { background: #27ae60; color: white; }
+		.tech-tag.ibec-2 { background: #229954; color: white; }
+		.tech-tag.ibec-3 { background: #1e8449; color: white; }
+		
+		/* CIS 1600 - Purple academic tones */
+		.tech-tag.cis-1 { background: #9b59b6; color: white; }
+		.tech-tag.cis-2 { background: #8e44ad; color: white; }
+		.tech-tag.cis-3 { background: #7d3c98; color: white; }
+		
+		/* Penn Electric Racing - Gray engineering tones */
+		.tech-tag.per-1 { background: #95a5a6; color: white; }
+		.tech-tag.per-2 { background: #7f8c8d; color: white; }
+		.tech-tag.per-3 { background: #6c7b7d; color: white; }
+		.tech-tag.per-4 { background: #566573; color: white; }
+		
+		/* Robot Tour - Teal robotics tones */
+		.tech-tag.robot-1 { background: #1abc9c; color: white; }
+		.tech-tag.robot-2 { background: #16a085; color: white; }
+		.tech-tag.robot-3 { background: #138d75; color: white; }
+		.tech-tag.robot-4 { background: #117a65; color: white; }
+		
+		/* Project Euler - Deep purple tones */
+		.tech-tag.euler-1 { background: #663399; color: white; }
+		.tech-tag.euler-2 { background: #5d2e91; color: white; }
+		.tech-tag.euler-3 { background: #542788; color: white; }
+		
+		/* Ex Futuro - Red security tones */
+		.tech-tag.futuro-1 { background: #e74c3c; color: white; }
+		.tech-tag.futuro-2 { background: #c0392b; color: white; }
+		.tech-tag.futuro-3 { background: #a93226; color: white; }
+		
+		/* Codebusters - Warm orange tones */
+		.tech-tag.code-1 { background: #f39c12; color: white; }
+		.tech-tag.code-2 { background: #e67e22; color: white; }
+		
+		/* Wii Channel - Modern blue/green tones */
+		.tech-tag.wii-1 { background: #3498db; color: white; }
+		.tech-tag.wii-2 { background: #2ecc71; color: white; }
+		
+		/* Music - Pink/magenta tones */
+		.tech-tag.music-1 { background: #e91e63; color: white; }
 		.resume-section {
 			flex: 1;
 			background: rgba(255, 255, 255, 0.9);
@@ -284,7 +360,8 @@
 			}
 			
 			.project-icon {
-				font-size: 2rem;
+				width: 40px;
+				height: 40px;
 			}
 			
 			.project-title {
@@ -293,6 +370,11 @@
 			
 			.project-description {
 				font-size: 0.7rem;
+			}
+			
+			.tech-tag {
+				font-size: 0.6rem;
+				padding: 0.15rem 0.3rem;
 			}
 			
 			.resume-preview {
@@ -336,7 +418,8 @@
 			}
 			
 			.project-icon {
-				font-size: 1.8rem;
+				width: 36px;
+				height: 36px;
 			}
 			
 			.project-title {
@@ -345,6 +428,11 @@
 			
 			.project-description {
 				font-size: 0.65rem;
+			}
+			
+			.tech-tag {
+				font-size: 0.55rem;
+				padding: 0.1rem 0.25rem;
 			}
 			
 			.resume-preview {
@@ -390,69 +478,122 @@
 			<h2 class="section-title">Projects</h2>
 			<div class="projects-grid">
 				<a href="projects/quickcal/" class="project-tile">
-					<div class="project-icon">📅</div>
+					<img src="home/images/projects/quickcal.png" alt="QuickCal" class="project-icon">
 					<div class="project-title">QuickCal</div>
-					<div class="project-description">Fast calendar & scheduling app</div>
+					<div class="project-description">AI Powered Calendar Chrome Add-on</div>
+					<div class="project-tags">
+						<span class="tech-tag quickcal-1">JavaScript</span>
+						<span class="tech-tag quickcal-2">Google Gemini</span>
+						<span class="tech-tag quickcal-3">LLMs</span>
+					</div>
 				</a>
 				<a href="games/bridge/" class="project-tile">
-					<div class="project-icon">🌉</div>
-					<div class="project-title">Bridge Sim</div>
-					<div class="project-description">Physics simulation game</div>
+					<img src="home/images/projects/bridge.png" alt="Bridge Sim" class="project-icon">
+					<div class="project-title">Penn Bridge</div>
+					<div class="project-description">Bridge Design Simulator</div>
+					<div class="project-tags">
+						<span class="tech-tag bridge-1">Java</span>
+						<span class="tech-tag bridge-2">GUI Programming</span>
+						<span class="tech-tag bridge-3">Physics</span>
+					</div>
 				</a>
 				<a href="projects/astro/" class="project-tile">
-					<div class="project-icon">🚀</div>
+					<img src="home/images/projects/astro.jpg" alt="AstroGPT" class="project-icon">
 					<div class="project-title">AstroGPT</div>
-					<div class="project-description">Deep space calculator</div>
+					<div class="project-description">Deep Space Object Lookup</div>
+					<div class="project-tags">
+						<span class="tech-tag astro-1">JavaScript</span>
+						<span class="tech-tag astro-2">Astronomy</span>
+						<span class="tech-tag astro-3">OpenCV</span>
+					</div>
 				</a>
-				<a href="projects/ibec/" class="project-tile">
-					<div class="project-icon">🏢</div>
+				<a href="https://www.pennibec.com" class="project-tile">
+					<img src="home/images/projects/ibec.png" alt="IBEC" class="project-icon">
 					<div class="project-title">IBEC</div>
 					<div class="project-description">Business consulting site</div>
+					<div class="project-tags">
+						<span class="tech-tag ibec-1">Finance</span>
+						<span class="tech-tag ibec-2">Stock Trading</span>
+						<span class="tech-tag ibec-3">AWS S3</span>
+					</div>
 				</a>
-				<a href="#" class="project-tile">
-					<div class="project-icon">📚</div>
+				<a href="https://www.cis.upenn.edu/~cis1600/current/" class="project-tile">
+					<img src="home/images/projects/cis1600.png" alt="CIS 1600" class="project-icon">
 					<div class="project-title">CIS 1600</div>
-					<div class="project-description">PrairieLearn exercises</div>
+					<div class="project-description">Discrete Math Teaching Assistant</div>
+					<div class="project-tags">
+						<span class="tech-tag cis-1">Math</span>
+						<span class="tech-tag cis-2">Probability</span>
+						<span class="tech-tag cis-3">Graph Theory</span>
+					</div>
 				</a>
-				<a href="#" class="project-tile">
-					<div class="project-icon">⚡</div>
+				<a href="http://pennelectricracing.com" class="project-tile">
+					<img src="home/images/projects/per.webp" style="height: 60px" alt="Penn Electric Racing" class="project-icon">
 					<div class="project-title">Penn Electric Racing</div>
 					<div class="project-description">Formula SAE team</div>
+					<div class="project-tags">
+						<span class="tech-tag per-1">C++</span>
+						<span class="tech-tag per-2">Rust</span>
+						<span class="tech-tag per-3">Embedded Software</span>
+						<span class="tech-tag per-4">Docker</span>
+					</div>
 				</a>
 				<a href="projects/robot-tour/" class="project-tile">
-					<div class="project-icon">🤖</div>
+					<img src="home/images/projects/robot.png" style="height: 60px"alt="Robot Tour" class="project-icon">
 					<div class="project-title">Robot Tour</div>
 					<div class="project-description">Navigation demo</div>
+					<div class="project-tags">
+						<span class="tech-tag robot-1">Arduino</span>
+						<span class="tech-tag robot-2">C++</span>
+						<span class="tech-tag robot-3">Robotics</span>
+						<span class="tech-tag robot-4">Competition</span>
+					</div>
 				</a>
-				<a href="#" class="project-tile">
-					<div class="project-icon">🧮</div>
+				<a href="https://github.com/chinmaygovind/Project-Euler" class="project-tile">
+					<img src="home/images/projects/euler.png" style="height: 60px" alt="Project Euler" class="project-icon">
 					<div class="project-title">Project Euler</div>
-					<div class="project-description">Math problem solutions</div>
+					<div class="project-description">Math/Algorithm Problems</div>
+					<div class="project-tags">
+						<span class="tech-tag euler-1">Java</span>
+						<span class="tech-tag euler-2">Mathematics</span>
+						<span class="tech-tag euler-3">Algorithms</span>
+					</div>
 				</a>
-				<a href="#" class="project-tile">
-					<div class="project-icon">🔮</div>
+				<a href="https://github.com/vsingh21/CTF_Writeups" class="project-tile">
+					<img src="home/images/projects/ex-futuro.svg" alt="Ex Futuro" class="project-icon">
 					<div class="project-title">Ex Futuro</div>
-					<div class="project-description">Future tech exploration</div>
+					<div class="project-description">CTF Writeups</div>
+					<div class="project-tags">
+						<span class="tech-tag futuro-1">Cybersecurity</span>
+						<span class="tech-tag futuro-2">Cryptography</span>
+						<span class="tech-tag futuro-3">Research</span>
+					</div>
 				</a>
 				<a href="wii/channels/codebusters/" class="project-tile">
-					<div class="project-icon">🔓</div>
+					<img src="home/images/projects/codebusters.svg" alt="Codebusters" class="project-icon">
 					<div class="project-title">Codebusters</div>
-					<div class="project-description">Science Olympiad tool</div>
+					<div class="project-description">Science Olympiad Cryptogram Tools</div>
+					<div class="project-tags">
+						<span class="tech-tag code-1">JavaScript</span>
+						<span class="tech-tag code-2">Cryptography</span>
+					</div>
 				</a>
 				<a href="wii/" class="project-tile">
-					<div class="project-icon">🎮</div>
+					<img src="home/images/projects/wii.png" alt="Wii Channel" class="project-icon">
 					<div class="project-title">Wii Channel</div>
 					<div class="project-description">Interactive Wii menu</div>
+					<div class="project-tags">
+						<span class="tech-tag wii-1">React</span>
+						<span class="tech-tag wii-2">Node.js</span>
+					</div>
 				</a>
 				<a href="wii/channels/music/" class="project-tile">
-					<div class="project-icon">🎵</div>
-					<div class="project-title">Music Demos</div>
-					<div class="project-description">Audio compositions</div>
-				</a>
-				<a href="wii/channels/mii/" class="project-tile">
-					<div class="project-icon">👤</div>
-					<div class="project-title">About Mii</div>
-					<div class="project-description">Escape game portfolio</div>
+					<img src="home/images/projects/music.jpg" alt="Music Demos" class="project-icon">
+					<div class="project-title">Music</div>
+					<div class="project-description">Piano Demos</div>
+					<div class="project-tags">
+						<span class="tech-tag music-1">Classical Music</span>
+					</div>
 				</a>
 			</div>
 		</section>

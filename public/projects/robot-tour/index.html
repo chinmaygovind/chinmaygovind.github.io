@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robot Tour - MythBusters Edition</title>
+    <title>Robot Tour</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -104,7 +104,8 @@
             letter-spacing: 1px;
         }
         ul {
-            margin: 1rem 0 1rem 2rem;
+            margin: 1rem 0;
+            padding-left: 1.2rem;
         }
         .danger {
             color: #ffae42;
@@ -136,12 +137,109 @@
             color: #ff6600;
             transform: scale(1.05);
         }
+        
+        /* Media Gallery Styles */
+        .media-gallery {
+            margin-top: 2rem;
+        }
+        
+        /* Meet the Robot Section */
+        .robot-intro {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            margin: 1rem 0;
+        }
+        .robot-info {
+            flex: 1;
+        }
+        .robot-image {
+            flex: 1;
+            text-align: center;
+        }
+        .robot-image img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .photo-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .photo-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(255,102,0,0.3);
+        }
+        .photo-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+        .video-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: #1a1a1a;
+        }
+        .video-item video {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        .media-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 1rem 0.5rem 0.5rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
         @media (max-width: 600px) {
             .container {
                 padding: 1rem;
             }
-            .mythbusters-title {
+            .main-title {
                 font-size: 2rem;
+            }
+            .robot-intro {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .photo-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 0.5rem;
+            }
+            .video-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .photo-item img, .video-item video {
+                height: 150px;
             }
         }
     </style>
@@ -151,41 +249,119 @@
         <div class="main-title">ROBOT TOUR</div>
         <div class="subtitle">Science Olympiad Autonomous Robotics Project</div>
     </div>
-    <div class="hero-banner">
-        <div class="hero-text">
-            This project documents my journey building, coding, and competing with a custom autonomous robot for Science Olympiad's Robot Tour event. Built for durability, programmed for precision, and tested for real-world chaos.
-        </div>
-    </div>
     <div class="container">
         <div class="section-label">BUILD</div>
+        <div class="robot-intro">
+            <div class="robot-info">
         <h2>Meet the Robot</h2>
-        <ul>
-            <li><strong>Chassis:</strong> Custom-built for durability and modularity.</li>
-            <li><strong>Brains:</strong> Arduino-based, programmed in C++.</li>
-            <li><strong>Sensors:</strong> Encoders, gyros, and ultrasonic sensors for navigation and obstacle detection.</li>
-            <li><strong>Power:</strong> LiPo battery for reliable performance.</li>
-        </ul>
+                <ul>
+                <li><strong>Chassis:</strong> Custom 3D Printed for durability and modularity.</li>
+                <li><strong>Brains:</strong> Arduino-based, programmed in C++.</li>
+                <li><strong>Sensors:</strong> Motor Encoders + MPU6050 Gyroscope.</li>
+                <li><strong>Power:</strong> 6 AA+ Batteries.</li>
+                <li><strong>Performance:</strong> The robot can navigate 10+ meter-long paths in mazes, avoiding barriers and getting within inches of the target.</li>
+                </ul>
+            </div>
+            <div class="robot-image">
+                <img src="images/IMG_7876.jpg" alt="Robot Build Process">
+            </div>
+        </div>
         <div class="section-label">EVENT</div>
-        <h2>What is Robot Tour?</h2>
+        <h2>What is <a href="https://www.soinc.org/robot-tour-c">Robot Tour?</a></h2>
         <p>
-            Robot Tour is a Science Olympiad event where teams design, build, and program a robot to autonomously navigate a course and complete tasks. No remote controls, no do-overs—just pure engineering and experimentation!
+            In this event, teams design, build, program, and test one Robotic Vehicle to navigate a track to reach a target at a set amount of time as accurately and efficiently as possible.
         </p>
-        <div class="section-label">HOW IT WORKS</div>
-        <h2>How It Works</h2>
-        <ul>
-            <li>Path planning and navigation algorithms</li>
-            <li>Sensor fusion for real-time course correction</li>
-            <li>Failsafes and error handling for reliability</li>
-        </ul>
-        <div class="section-label">HIGHLIGHTS</div>
-        <h2>Project Highlights</h2>
-        <ul>
-            <li>Tested on multiple courses and conditions</li>
-            <li>Modular code for quick fixes and last-minute changes</li>
-            <li>Documented every step, including failures and improvements</li>
-        </ul>
-        <div class="cta">
-            <button class="cta-btn" onclick="alert('Photos and videos coming soon!')">See Photos & Videos (coming soon!)</button>
+        <div class="section-label">GALLERY</div>
+        <h2>Robot Photos</h2>
+        <div class="media-gallery">
+            <div class="photo-grid">
+                <div class="photo-item">
+                    <img src="images/IMG_7876.jpg" alt="Robot Build Process">
+                    <div class="media-caption">Robot Assembly</div>
+                </div>
+                <div class="photo-item">
+                    <img src="images/IMG_8182.jpg" alt="Robot Components">
+                    <div class="media-caption">Circuit Board & Sensors</div>
+                </div>
+                <div class="photo-item">
+                    <img src="images/IMG_8783.jpg" alt="Robot Testing">
+                    <div class="media-caption">Field Testing</div>
+                </div>
+                <div class="photo-item">
+                    <img src="images/IMG_8784.jpg" alt="Robot Competition">
+                    <div class="media-caption">Competition Ready</div>
+                </div>
+                <div class="photo-item">
+                    <img src="images/IMG_8785.JPG" alt="Robot Details">
+                    <div class="media-caption">Close-up Details</div>
+                </div>
+                <div class="photo-item">
+                    <img src="images/IMG_8787.JPG" alt="Robot Setup">
+                    <div class="media-caption">Pre-Competition Setup</div>
+                </div>
+                <div class="photo-item">
+                    <img src="images/IMG_8788.JPG" alt="Robot Final">
+                    <div class="media-caption">Final Configuration</div>
+                </div>
+                <div class="photo-item">
+                    <img src="images/73388521182__826C2FF9-9480-410B-9DC7-410A267E0BC9.jpg" alt="Robot Action">
+                    <div class="media-caption">Robot in Action</div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Robot Videos</h2>
+        <div class="media-gallery">
+            <div class="video-grid">
+                <div class="video-item">
+                    <video controls>
+                        <source src="images/IMG_7778.MOV" type="video/quicktime">
+                        <source src="images/IMG_7778.MOV" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="media-caption">Initial Testing</div>
+                </div>
+                <div class="video-item">
+                    <video controls>
+                        <source src="images/IMG_8185.MOV" type="video/quicktime">
+                        <source src="images/IMG_8185.MOV" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="media-caption">Navigation Test</div>
+                </div>
+                <div class="video-item">
+                    <video controls>
+                        <source src="images/IMG_8186.MOV" type="video/quicktime">
+                        <source src="images/IMG_8186.MOV" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="media-caption">Obstacle Course</div>
+                </div>
+                <div class="video-item">
+                    <video controls>
+                        <source src="images/IMG_8187.MOV" type="video/quicktime">
+                        <source src="images/IMG_8187.MOV" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="media-caption">Final Run</div>
+                </div>
+                <div class="video-item">
+                    <video controls>
+                        <source src="images/IMG_8188.MOV" type="video/quicktime">
+                        <source src="images/IMG_8188.MOV" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="media-caption">Competition Demo</div>
+                </div>
+                <div class="video-item">
+                    <video controls>
+                        <source src="images/72627611682__C9E62906-69A0-4716-80D2-B74138B12C0B.MOV" type="video/quicktime">
+                        <source src="images/72627611682__C9E62906-69A0-4716-80D2-B74138B12C0B.MOV" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="media-caption">Behind the Scenes</div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="footer">

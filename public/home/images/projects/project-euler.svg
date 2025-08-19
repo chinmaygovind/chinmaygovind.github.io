@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="mathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8e44ad;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9b59b6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="28" fill="url(#mathGradient)" stroke="#663399" stroke-width="2"/>
+  <!-- Mathematical symbols -->
+  <text x="32" y="20" text-anchor="middle" fill="white" font-family="serif" font-size="12" font-weight="bold">Σ</text>
+  <text x="20" y="35" text-anchor="middle" fill="white" font-family="serif" font-size="10">π</text>
+  <text x="44" y="35" text-anchor="middle" fill="white" font-family="serif" font-size="10">∞</text>
+  <text x="32" y="48" text-anchor="middle" fill="white" font-family="serif" font-size="8">√x²+y²</text>
+  <!-- Project Euler specific -->
+  <text x="32" y="56" text-anchor="middle" fill="white" font-family="Arial" font-size="6" font-weight="bold">EULER</text>
+  <!-- Decorative numbers -->
+  <text x="15" y="50" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="serif" font-size="6">1</text>
+  <text x="49" y="50" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="serif" font-size="6">∫</text>
+  <text x="10" y="25" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="serif" font-size="6">φ</text>
+  <text x="54" y="25" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="serif" font-size="6">e</text>
+</svg>

@@ -1,6 +1,7 @@
 
 
 projects:
+whale research
 astroGPT
 IBEC
 project euler
